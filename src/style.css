@@ -778,6 +778,11 @@ h2 {
     align-items: flex-start;
     padding: 0.75rem;
   }
+  /* song cover scaled up to the poster's height so both cards' text lines up */
+  .peek-cover {
+    width: 5.9rem;
+    height: 5.9rem;
+  }
 }
 
 /* ---------- footer ---------- */
