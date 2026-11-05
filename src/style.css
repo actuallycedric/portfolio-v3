@@ -427,6 +427,21 @@ h1 {
   .section-wide {
     grid-column: 2 / -1;
   }
+  /* about: favourite cards end level with the places marquee. the cards sit at
+     the bottom of their cell, and the places line is pushed to the bottom of the
+     text column in case the cards are the taller of the two (padding keeps the
+     usual gap above it, the auto margin soaks up any extra) */
+  #about .section-side {
+    align-self: end;
+  }
+  #about .section-main {
+    display: flex;
+    flex-direction: column;
+  }
+  #about .section-main .places-label {
+    margin-top: auto;
+    padding-top: 2.25rem;
+  }
 }
 
 /* circled section number with its name; inline on phones, stacked on desktop */
@@ -516,12 +531,24 @@ h2 {
   color: var(--ink);
 }
 
+/* the cards open the side column, so they don't need the gap left for a title */
+.section-side > .favourites:first-child {
+  margin-top: 0;
+}
+
 /* ---------- skills ---------- */
+/* full-width row under "about": two columns on phones, five across on desktop */
 .skills {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   column-gap: 2rem;
   margin-top: 0.75rem;
+}
+
+@media (min-width: 720px) {
+  .skills {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
 }
 
 .skills li {
@@ -611,7 +638,7 @@ h2 {
   display: flex;
   gap: 1.5rem;
   width: max-content;
-  animation: scroll 28s linear infinite;
+  animation: scroll 23s linear infinite;
   will-change: transform;
   backface-visibility: hidden;
 }
@@ -703,6 +730,18 @@ h2 {
   stroke-linejoin: round;
 }
 
+/* the address itself, right after "email"; undoes the right-pushed, faded
+   style .connections gives its arrow/hint spans */
+.connections .copy-email .email-address {
+  min-width: 0;
+  margin-left: 0;
+  overflow-wrap: anywhere;
+  font-size: 0.9375rem;
+  font-weight: 400;
+  opacity: 1;
+  color: var(--text);
+}
+
 .copy-email .copy-hint {
   font-size: 0.75rem;
   letter-spacing: 0.08em;
@@ -713,7 +752,7 @@ h2 {
   opacity: 1;
 }
 
-/* ---------- favourite movie / song cards under "connect" ---------- */
+/* ---------- favourite movie / song cards in "about" ---------- */
 /* one shared column so both cards are always the same width */
 .favourites {
   display: grid;
@@ -822,32 +861,3 @@ h2 {
   }
 }
 
-/* desktop: the cards sit under the heading, to the left of the links */
-@media (min-width: 960px) {
-  #connect .section-side {
-    display: contents;
-  }
-  #connect .connections {
-    grid-column: 3;
-    grid-row: 1 / span 2;
-    padding-top: 0.25rem;
-    /* rows share the full height so the last one ends level with the cards */
-    display: flex;
-    flex-direction: column;
-  }
-  #connect .connections li {
-    display: flex;
-    flex: 1;
-  }
-  #connect .connections li > a,
-  #connect .connections li > button {
-    flex: 1;
-    padding-block: 0;
-  }
-  #connect .favourites {
-    grid-column: 2;
-    grid-row: 2;
-    margin-top: 0;
-    align-self: end;
-  }
-}
