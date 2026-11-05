@@ -4,6 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Clarence Cesante — CS student at UofT Scarborough." />
+    <link rel="canonical" href="https://clarencecesante.me/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://clarencecesante.me/" />
+    <meta property="og:title" content="clarence cesante" />
+    <meta property="og:description" content="cs student @ uoft, interested in backend systems and full-stack web development." />
+    <meta property="og:image" content="https://clarencecesante.me/photos/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="trees and storefronts along king street west, toronto" />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="stylesheet" href="/src/style.css" />
     <title>clarence cesante</title>
@@ -43,10 +53,11 @@
       </nav>
 
       <main id="top">
+        <svg class="subway" aria-hidden="true"></svg>
         <header class="hero">
           <figure class="hero-figure rise">
             <div class="hero-art">
-              <img src="/photos/king-street-west.jpg" alt="" width="1600" height="1066" />
+              <img src="/photos/king-street-west.webp" alt="" width="1600" height="1066" />
             </div>
             <figcaption>king street west</figcaption>
           </figure>
@@ -54,7 +65,7 @@
           <div class="hero-text rise" style="--delay: 120ms">
             <h1>hello, i'm <span class="name">clarence</span></h1>
             <p class="lede">
-              i'm a first year cs student @ uoft (expected c/o 2031), interested in
+              i'm a cs student @ uoft (expected class of 2031), interested in
               <em>backend systems</em> and <em>full-stack web development</em>.
             </p>
             <a class="cta" href="#projects">scroll<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16M5 13l7 7 7-7" /></svg></a>
@@ -62,7 +73,7 @@
         </header>
 
         <section class="section rise" id="projects">
-          <div class="section-label"><span class="label-num" aria-hidden="true"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="19.25" /></svg>1</span><span class="label-name">projects</span></div>
+          <div class="section-label"><a class="label-num station" href="#projects" aria-label="projects, stop 1"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19.25" /></svg>1</a><span class="label-name">projects</span></div>
           <div class="section-main">
             <h2>projects</h2>
           </div>
@@ -126,7 +137,7 @@
         </section>
 
         <section class="section rise" id="about">
-          <div class="section-label"><span class="label-num" aria-hidden="true"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="19.25" /></svg>2</span><span class="label-name">about</span></div>
+          <div class="section-label"><a class="label-num station" href="#about" aria-label="about, stop 2"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19.25" /></svg>2</a><span class="label-name">about</span></div>
           <div class="section-main">
             <h2>about me</h2>
             <p>
@@ -134,12 +145,12 @@
               and <em>travelling</em> (especially urban areas).
             </p>
             <p class="places-label">some of the places i've gone:</p>
-            <div class="places" role="group" aria-label="places i've been"><ul class="places-track"><li>hong kong<span class="flag">🇭🇰</span></li><li>singapore<span class="flag">🇸🇬</span></li><li>manila<span class="flag">🇵🇭</span></li><li>tokyo<span class="flag">🇯🇵</span></li><li>nyc<span class="flag">🇺🇸</span></li><li>chicago<span class="flag">🇺🇸</span></li><li>washington dc<span class="flag">🇺🇸</span></li><li>montreal<span class="flag">🇨🇦</span></li></ul></div>
+            <div class="places" role="group" aria-label="places i've been"><ul class="places-track"><li>hong kong<img class="flag" src="/flags/hk.svg" alt="" width="20" height="15" /></li><li>singapore<img class="flag" src="/flags/sg.svg" alt="" width="20" height="15" /></li><li>manila<img class="flag" src="/flags/ph.svg" alt="" width="20" height="15" /></li><li>tokyo<img class="flag" src="/flags/jp.svg" alt="" width="20" height="15" /></li><li>nyc<img class="flag" src="/flags/us.svg" alt="" width="20" height="15" /></li><li>chicago<img class="flag" src="/flags/us.svg" alt="" width="20" height="15" /></li><li>washington dc<img class="flag" src="/flags/us.svg" alt="" width="20" height="15" /></li><li>montreal<img class="flag" src="/flags/ca.svg" alt="" width="20" height="15" /></li></ul></div>
           </div>
           <div class="section-side">
             <div class="favourites">
               <div class="peek">
-                <img class="peek-poster" src="/photos/the-departed.jpg" alt="the departed poster" width="1016" height="1500" loading="lazy" />
+                <img class="peek-poster" src="/photos/the-departed.webp" alt="the departed poster" width="203" height="300" loading="lazy" />
                 <div>
                   <p class="peek-label">favourite movie</p>
                   <p class="peek-title">the departed</p>
@@ -159,7 +170,7 @@
         </section>
 
         <section class="section rise" id="photos">
-          <div class="section-label"><span class="label-num" aria-hidden="true"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="19.25" /></svg>3</span><span class="label-name">photos</span></div>
+          <div class="section-label"><a class="label-num station" href="#photos" aria-label="photos, stop 3"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19.25" /></svg>3</a><span class="label-name">photos</span></div>
           <div class="section-main">
             <div class="heading-row">
               <h2>photos</h2>
@@ -168,22 +179,22 @@
           </div>
           <div class="section-wide carousel">
             <div class="carousel-track">
-              <figure><img src="/photos/food.jpg" alt="food with the bros" loading="lazy" draggable="false" /></figure>
-              <figure><img src="/photos/margaux.jpg" alt="margaux" loading="lazy" draggable="false" /></figure>
-              <figure><img src="/photos/flowers.jpg" alt="flowers" loading="lazy" draggable="false" /></figure>
-              <figure><img src="/photos/plaza.jpg" alt="the plaza" loading="lazy" draggable="false" /></figure>
-              <figure><img src="/photos/stay-on-the-path.jpg" alt="stay on the path" loading="lazy" draggable="false" /></figure>
-              <figure aria-hidden="true"><img src="/photos/food.jpg" alt="" loading="lazy" draggable="false" /></figure>
-              <figure aria-hidden="true"><img src="/photos/margaux.jpg" alt="" loading="lazy" draggable="false" /></figure>
-              <figure aria-hidden="true"><img src="/photos/flowers.jpg" alt="" loading="lazy" draggable="false" /></figure>
-              <figure aria-hidden="true"><img src="/photos/plaza.jpg" alt="" loading="lazy" draggable="false" /></figure>
-              <figure aria-hidden="true"><img src="/photos/stay-on-the-path.jpg" alt="" loading="lazy" draggable="false" /></figure>
+              <figure><img src="/photos/food.webp" alt="food with the bros" loading="lazy" draggable="false" /></figure>
+              <figure><img src="/photos/margaux.webp" alt="margaux" loading="lazy" draggable="false" /></figure>
+              <figure><img src="/photos/flowers.webp" alt="flowers" loading="lazy" draggable="false" /></figure>
+              <figure><img src="/photos/plaza.webp" alt="the plaza" loading="lazy" draggable="false" /></figure>
+              <figure><img src="/photos/stay-on-the-path.webp" alt="stay on the path" loading="lazy" draggable="false" /></figure>
+              <figure aria-hidden="true"><img src="/photos/food.webp" alt="" loading="lazy" draggable="false" /></figure>
+              <figure aria-hidden="true"><img src="/photos/margaux.webp" alt="" loading="lazy" draggable="false" /></figure>
+              <figure aria-hidden="true"><img src="/photos/flowers.webp" alt="" loading="lazy" draggable="false" /></figure>
+              <figure aria-hidden="true"><img src="/photos/plaza.webp" alt="" loading="lazy" draggable="false" /></figure>
+              <figure aria-hidden="true"><img src="/photos/stay-on-the-path.webp" alt="" loading="lazy" draggable="false" /></figure>
             </div>
           </div>
         </section>
 
         <section class="section rise" id="connect">
-          <div class="section-label"><span class="label-num" aria-hidden="true"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="19.25" /></svg>4</span><span class="label-name">connect</span></div>
+          <div class="section-label"><a class="label-num station" href="#connect" aria-label="connect, stop 4"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19.25" /></svg>4</a><span class="label-name">connect</span></div>
           <div class="section-main">
             <h2>connect</h2>
           </div>
@@ -200,7 +211,7 @@
       </main>
 
       <footer class="footer">
-        <p>clarence cesante · 2026</p>
+        <p>clarence cesante · <span class="year">2026</span></p>
       </footer>
     </div>
 

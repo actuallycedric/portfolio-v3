@@ -383,8 +383,14 @@ h1 {
   color: var(--ink);
 }
 
+/* flag images, not emoji: windows has no flag emoji and shows "HK", "JP"... */
 .places .flag {
+  display: inline-block;
+  width: 1.1em;
+  height: auto;
   margin-left: 0.4rem;
+  vertical-align: -0.1em;
+  border-radius: 2px;
 }
 
 .places li::after {
@@ -418,11 +424,16 @@ h1 {
   }
   /* circle centred on the heading's first line, flush with the page's left edge
      (.section prefix outranks the base .section-label rule further down) */
+  /* name beside the circle, like a station label, so the subway line can run
+     straight down through the circles without crossing any text */
   .section .section-label {
-    flex-direction: column;
     align-items: flex-start;
     gap: 0.75rem;
     padding-top: 0.5rem;
+  }
+  .section .label-name {
+    line-height: 2.5rem;
+    white-space: nowrap;
   }
   .section-wide {
     grid-column: 2 / -1;
@@ -478,9 +489,84 @@ h1 {
   inset: 0;
   width: 100%;
   height: 100%;
-  fill: none;
+  /* filled with the page colour so the subway line never shows through */
+  fill: var(--bg);
   stroke: currentColor;
   stroke-width: 1.25;
+}
+
+/* the number sits above its own ring */
+.label-num {
+  isolation: isolate;
+}
+
+.label-num svg {
+  z-index: -1;
+}
+
+/* ---------- subway line through stops 1-4 ----------
+   main.js draws one segment between each pair of .station circles: a faint
+   track, plus a lit stroke that fills down the track as you scroll (and
+   empties as you scroll back up). stops fill in once the line reaches them. */
+main {
+  position: relative;
+}
+
+.subway {
+  display: none;
+}
+
+@media (min-width: 960px) {
+  .subway {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+}
+
+.subway line {
+  stroke-width: 4;
+  stroke-linecap: butt;
+  fill: none;
+}
+
+.subway .track {
+  stroke: var(--accent);
+}
+
+.subway .lit {
+  stroke: var(--ink);
+}
+
+.station {
+  transition: color 0.2s;
+}
+
+.station svg {
+  transition: fill 0.2s, stroke-width 0.2s;
+}
+
+.station:hover svg,
+.station:focus-visible svg {
+  stroke-width: 2.5;
+}
+
+.station:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 50%;
+}
+
+.station.lit {
+  color: var(--bg);
+}
+
+.station.lit svg {
+  fill: var(--ink);
 }
 
 .label-name {
@@ -863,6 +949,10 @@ h2 {
   .places li[aria-hidden="true"],
   .carousel figure[aria-hidden="true"] {
     display: none;
+  }
+  .station,
+  .station svg {
+    transition: none;
   }
 }
 
