@@ -54,8 +54,8 @@
           <div class="hero-text rise" style="--delay: 120ms">
             <h1>hello, i'm <span class="name">clarence</span></h1>
             <p class="lede">
-              i'm a first year cs student @ uoft, interested in
-              <em>distributed systems</em> and <em>full-stack web development</em>.
+              i'm a first year cs student @ uoft (expected c/o 2031), interested in
+              <em>backend systems</em> and <em>full-stack web development</em>.
             </p>
             <a class="cta" href="#about">scroll<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16M5 13l7 7 7-7" /></svg></a>
           </div>
@@ -81,9 +81,9 @@
               <li><svg aria-hidden="true"><use href="/icons.svg#postgres" /></svg>postgres</li>
               <li><svg aria-hidden="true"><use href="/icons.svg#java" /></svg>java</li>
               <li><svg aria-hidden="true"><use href="/icons.svg#spring-boot" /></svg>spring boot</li>
-              <li><svg aria-hidden="true"><use href="/icons.svg#maven" /></svg>maven</li>
+              <li><svg aria-hidden="true"><use href="/icons.svg#junit" /></svg>junit</li>
+              <li><svg aria-hidden="true"><use href="/icons.svg#testcontainers" /></svg>testcontainers</li>
               <li><svg aria-hidden="true"><use href="/icons.svg#python" /></svg>python</li>
-              <li><svg aria-hidden="true"><use href="/icons.svg#docker" /></svg>docker</li>
               <li><svg aria-hidden="true"><use href="/icons.svg#git" /></svg>git</li>
             </ul>
           </div>
@@ -97,14 +97,16 @@
           <article class="section-wide project">
             <div class="project-head">
               <h3 class="side-title">live stock tracker (wip)</h3>
-              <p class="meta">spring boot · react · postgresql</p>
+              <p class="meta">spring boot · react · postgresql · websockets</p>
             </div>
             <div class="project-body">
               <p>
-                prices are polled every 15 seconds from the free api at
-                <a href="https://finnhub.io" target="_blank" rel="noreferrer">finnhub.io</a>
-                and stored in a postgresql database. i used recharts and daisyui
-                to create an interactive display.
+                a spring boot backend polls
+                finnhub every 15 seconds and broadcasts the latest prices to every
+                connected client over websockets (stomp), so the ui updates live
+                without refreshing. 24h price history is saved to postgres, so the
+                app shows the last known prices on load and the charts persist across
+                business days.
               </p>
               <div class="text-links">
                 <a href="https://github.com/actuallycedric/stock-tracker-frontend" target="_blank" rel="noreferrer">frontend</a>
@@ -115,6 +117,25 @@
           <figure class="section-wide project-shot">
             <img src="/photos/tracker-holdings.webp" alt="live stock tracker holdings table beside a price chart for nvda" width="1600" height="750" loading="lazy" />
           </figure>
+          <article class="section-wide project">
+            <div class="project-head">
+              <h3 class="side-title">bank api</h3>
+              <p class="meta">spring boot · postgresql · testcontainers</p>
+            </div>
+            <div class="project-body">
+              <p>
+                a rest api rebuild of my earlier cli bank app. accounts support
+                deposits, withdrawals, and transfers, with paginated transaction
+                history. invalid requests return clear 400 / 404 / 409 errors, and
+                transfers run in a single transaction so a failure never leaves one
+                account debited without the other credited. integration tests run
+                against a real postgres instance in docker via testcontainers.
+              </p>
+              <div class="text-links">
+                <a href="https://github.com/actuallycedric/bank-account-reboot" target="_blank" rel="noreferrer">repo</a>
+              </div>
+            </div>
+          </article>
         </section>
 
         <section class="section rise" id="photos">
