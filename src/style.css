@@ -537,6 +537,11 @@ h2 {
 }
 
 /* ---------- skills ---------- */
+/* extra room after the last project so the list reads as its own block */
+.project + .skills-block {
+  margin-top: 2rem;
+}
+
 /* full-width row under "about": two columns on phones, five across on desktop */
 .skills {
   display: grid;
