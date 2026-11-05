@@ -1,0 +1,835 @@
+@import "@fontsource-variable/geist";
+
+/* ---------- tokens ---------- */
+:root {
+  /* light: cream paper with sage accents and deep olive ink.
+     dark: olive-black paper, sage ink, muted cream text. */
+  --sage: #ccd5ae;
+  --cream: #faedcd;
+
+  --bg: light-dark(var(--cream), #171912);
+  --ink: light-dark(#3b4525, var(--sage));
+  --text: light-dark(#5a5340, #d8ccb0);
+  --text-faint: light-dark(#8c8366, #8a8571);
+  --rule: light-dark(#e6d6ae, #2c3023);
+  --accent: light-dark(var(--sage), #3c4430);
+
+  --sans: "Geist Variable", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  /* follow the system unless the toggle picked a theme */
+  color-scheme: light dark;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+/* ---------- base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  line-height: 1.7;
+}
+
+::selection {
+  background: var(--sage);
+  color: #171912;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 1.5px solid var(--ink);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.wrap {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 5vw, 4.5rem);
+}
+
+em {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* ---------- top bar ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  font-size: 0.9375rem;
+}
+
+.nav-links a {
+  color: var(--text);
+  background: linear-gradient(var(--ink), var(--ink)) 0 100% / 0 1px no-repeat;
+  padding-bottom: 2px;
+  transition: background-size 0.3s var(--ease), color 0.2s;
+}
+
+.nav-links a:hover {
+  color: var(--ink);
+  background-size: 100% 1px;
+}
+
+.nav-icons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-icons a,
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--ink);
+  transition: opacity 0.2s;
+}
+
+.nav-icons a:hover,
+.theme-toggle:hover {
+  opacity: 0.6;
+}
+
+/* "connect" pill that jumps to the connect section */
+.nav-icons .nav-connect {
+  display: inline-flex;
+  gap: 0.4rem;
+  width: auto;
+  height: auto;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  background: var(--accent);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.nav-icons .nav-connect svg {
+  width: 0.85rem;
+  height: 0.85rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.nav-icons svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  fill: currentColor;
+}
+
+.theme-toggle {
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.theme-toggle svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* show the moon in light mode, the sun in dark mode */
+.theme-toggle .sun {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle .sun {
+    display: block;
+  }
+  :root:not([data-theme="light"]) .theme-toggle .moon {
+    display: none;
+  }
+}
+
+:root[data-theme="dark"] .theme-toggle .sun {
+  display: block;
+}
+
+:root[data-theme="dark"] .theme-toggle .moon {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .nav-links {
+    display: none;
+  }
+}
+
+/* ---------- hero ---------- */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 3rem;
+  align-items: center;
+  padding: clamp(3rem, 8vw, 6.5rem) 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+@media (min-width: 860px) {
+  .hero {
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(3rem, 7vw, 7rem);
+    min-height: min(52rem, calc(100svh - 6rem));
+  }
+  /* photo flush with the page's left edge, like the logo and section numbers
+     (.hero prefix outranks the base .hero-figure rule further down) */
+  .hero .hero-figure {
+    justify-self: start;
+  }
+}
+
+/* black-and-white photo multiplied onto sage, so it reads as a sage print */
+.hero-figure {
+  justify-self: center;
+  width: min(100%, 26rem);
+}
+
+.hero-figure figcaption {
+  margin-top: 0.875rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.hero-art {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: 999px 999px 0.375rem 0.375rem;
+  overflow: hidden;
+  background: var(--sage);
+  isolation: isolate;
+}
+
+.hero-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 42% 30%;
+  filter: grayscale(1) contrast(1.05) brightness(1.1);
+  mix-blend-mode: multiply;
+}
+
+/* a hairline arch just inside the photo, like a mat in a frame */
+.hero-art::after {
+  content: "";
+  position: absolute;
+  inset: 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--cream) 75%, transparent);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+h1 {
+  font-size: clamp(2.75rem, 6.5vw, 4.75rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+}
+
+/* sage highlighter stroke under the name */
+.name {
+  background: linear-gradient(var(--accent), var(--accent)) 0 88% / 100% 0.3em no-repeat;
+}
+
+.lede {
+  max-width: 28rem;
+  margin-top: 1.75rem;
+  font-size: 1.125rem;
+  line-height: 1.75;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.75rem;
+  margin-top: 2.75rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--ink);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.cta svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.3s var(--ease);
+}
+
+.cta:hover svg {
+  transform: translateY(3px);
+}
+
+.section-main .places-label {
+  margin-top: 2.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+/* ---------- places marquee ---------- */
+.places {
+  max-width: 30rem;
+  margin-top: 0.625rem;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.places-track {
+  display: flex;
+  width: max-content;
+  animation: places-scroll 18s linear infinite;
+  /* give the wide strip its own GPU layer so mobile browsers paint all of it,
+     not just the first screen-width */
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* pause on hover only for real pointers; a tap leaves :hover stuck on mobile
+   and would freeze the marquee */
+@media (hover: hover) and (pointer: fine) {
+  .places:hover .places-track {
+    animation-play-state: paused;
+  }
+}
+
+.places li {
+  flex: none;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.places .flag {
+  margin-left: 0.4rem;
+}
+
+.places li::after {
+  content: "•";
+  margin: 0 0.9rem;
+  color: var(--accent);
+}
+
+@keyframes places-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------- numbered sections ---------- */
+.section {
+  display: grid;
+  /* minmax(0, …) stops max-content tracks (carousel) from widening the column */
+  grid-template-columns: minmax(0, 1fr);
+  /* one vertical rhythm: 2rem between every block inside a section */
+  gap: 2rem 3rem;
+  padding: clamp(3.5rem, 8vw, 5.5rem) 0;
+  border-bottom: 1px solid var(--rule);
+  scroll-margin-top: 1rem;
+}
+
+@media (min-width: 960px) {
+  .section {
+    grid-template-columns: 9rem minmax(0, 1.1fr) minmax(0, 1fr);
+    column-gap: clamp(2rem, 5vw, 5rem);
+  }
+  /* circle centred on the heading's first line, flush with the page's left edge
+     (.section prefix outranks the base .section-label rule further down) */
+  .section .section-label {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
+  }
+  .section-wide {
+    grid-column: 2 / -1;
+  }
+}
+
+/* circled section number with its name; inline on phones, stacked on desktop */
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* phones: pull the heading closer to its label than the 2rem block gap */
+@media (max-width: 959px) {
+  .section-label {
+    margin-bottom: -0.75rem;
+  }
+}
+
+/* the ring is an SVG stroke rather than a CSS border: browsers antialias it
+   properly, where a 1px border-radius circle looks jagged on 1x screens */
+.label-num {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.label-num svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.25;
+}
+
+.label-name {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+h2 {
+  font-size: clamp(2.25rem, 4.5vw, 3.25rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+}
+
+.section-main > p:not(.places-label) {
+  max-width: 30rem;
+  margin-top: 1.25rem;
+  font-size: 1.0625rem;
+}
+
+/* nudges the side column's first line level with the big heading's cap height */
+.section-side {
+  padding-top: 0.25rem;
+}
+
+/* heading with a small note sitting on the same baseline to its right */
+.heading-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 1.25rem;
+}
+
+.heading-note {
+  font-size: 0.9375rem;
+  color: var(--text-faint);
+}
+
+.side-title {
+  font-size: 1.375rem;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+
+/* ---------- skills ---------- */
+.skills {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 2rem;
+  margin-top: 0.75rem;
+}
+
+.skills li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.9375rem;
+  transition: color 0.2s;
+}
+
+.skills li:hover {
+  color: var(--ink);
+}
+
+.skills svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex-shrink: 0;
+  fill: var(--ink);
+}
+
+/* ---------- projects ---------- */
+.project .meta {
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+/* title and tech line, then the description running the full width below */
+.project-body {
+  margin-top: 1.25rem;
+}
+
+.project p:not(.meta) {
+  font-size: 1rem;
+}
+
+.project p a,
+.text-links a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  transition: text-decoration-color 0.2s;
+}
+
+.project p a:hover,
+.text-links a:hover {
+  text-decoration-color: var(--ink);
+}
+
+.text-links {
+  display: flex;
+  gap: 1.75rem;
+  margin-top: 1.5rem;
+  font-size: 0.9375rem;
+}
+
+/* sage tint done with filters alone: a coloured backdrop would bleed
+   through as a faint outline at the rounded edges */
+.project-shot img {
+  width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  filter: grayscale(1) sepia(0.45) hue-rotate(35deg) saturate(0.9) contrast(1.05);
+}
+
+/* ---------- photo carousel ---------- */
+.carousel {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+
+.carousel-track {
+  display: flex;
+  gap: 1.5rem;
+  width: max-content;
+  animation: scroll 28s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* pause on hover only for devices that truly hover; touch taps leave
+   :hover stuck on and would freeze the scroll */
+@media (hover: hover) and (pointer: fine) {
+  .carousel:hover .carousel-track {
+    animation-play-state: paused;
+  }
+}
+
+.carousel figure {
+  flex: none;
+  width: 16rem;
+}
+
+.carousel img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
+/* the track holds two identical sets; shifting by half loops seamlessly */
+@keyframes scroll {
+  to {
+    transform: translateX(calc(-50% - 0.75rem));
+  }
+}
+
+/* ---------- connections ---------- */
+.connections li a,
+.connections li button {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--ink);
+  transition: padding-left 0.3s var(--ease);
+}
+
+.connections li:first-child a {
+  padding-top: 0;
+}
+
+.connections svg {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  fill: currentColor;
+}
+
+.connections span {
+  margin-left: auto;
+  font-size: 0.875rem;
+  opacity: 0.45;
+  transition: opacity 0.2s;
+}
+
+.connections a:hover,
+.connections button:hover {
+  padding-left: 0.5rem;
+}
+
+.connections a:hover span,
+.connections button:hover span {
+  opacity: 1;
+}
+
+/* side by side on desktop: stretch the rows evenly so the list starts level
+   with the heading and its last line sits level with the bottom of the
+   favourite song card */
+@media (min-width: 960px) {
+  .connections {
+    display: flex;
+    flex-direction: column;
+  }
+  .connections li {
+    display: flex;
+    flex: 1;
+  }
+  .connections li > a,
+  .connections li > button {
+    flex: 1;
+    padding-block: 0;
+  }
+}
+
+/* "email" row: a button styled like the link rows that copies the address */
+.copy-email {
+  width: 100%;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.connections .stroke-icon {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.copy-email .copy-hint {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.copy-email.copied .copy-hint {
+  opacity: 1;
+}
+
+/* ---------- favourite movie / song cards under "connect" ---------- */
+/* one shared column so both cards are always the same width */
+.favourites {
+  display: grid;
+  grid-template-columns: minmax(0, 18rem);
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.peek {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.75rem 1.25rem 0.75rem 0.75rem;
+  border: 1px solid var(--rule);
+  border-radius: 0.875rem;
+}
+
+.peek img {
+  flex-shrink: 0;
+  border-radius: 0.4rem;
+  object-fit: cover;
+}
+
+/* same image width on both cards so their text lines up */
+.peek-poster {
+  width: 4rem;
+  height: 5.9rem;
+}
+
+.peek-cover {
+  width: 4rem;
+  height: 4rem;
+}
+
+.peek-label {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.peek-title {
+  margin-top: 0.15rem;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.peek-sub {
+  font-size: 0.875rem;
+  color: var(--text);
+}
+
+/* ---------- footer ---------- */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 2.25rem 0;
+  font-size: 0.8125rem;
+  color: var(--text-faint);
+}
+
+/* ---------- entrance animation ---------- */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/* "backwards" (not "both") so nothing lingers once the animation ends;
+   a held transform can leave a section on a soft, blurry rendering layer */
+.rise {
+  animation: rise 0.8s var(--ease) backwards;
+  animation-delay: var(--delay, 0ms);
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .rise {
+    animation: none;
+  }
+  .places,
+  .carousel {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .places-track,
+  .carousel-track {
+    animation: none;
+  }
+  .places li[aria-hidden="true"],
+  .carousel figure[aria-hidden="true"] {
+    display: none;
+  }
+}
