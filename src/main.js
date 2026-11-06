@@ -59,6 +59,27 @@ document.querySelectorAll('.copy-email').forEach((button) => {
   })
 })
 
+// Last played on spotify: swap the fallback card's contents for the real
+// track. Any failure (no env vars, spotify down) just leaves the fallback.
+const lastPlayed = document.querySelector('#last-played')
+
+if (lastPlayed) {
+  fetch('/api/spotify')
+    .then((res) => (res.ok ? res.json() : Promise.reject(new Error(res.status))))
+    .then((track) => {
+      const cover = lastPlayed.querySelector('.peek-cover')
+      const link = lastPlayed.querySelector('.peek-title a')
+      if (track.image) {
+        cover.src = track.image
+        cover.alt = `${track.album} album cover`
+      }
+      link.href = track.url
+      link.textContent = track.title.toLowerCase()
+      lastPlayed.querySelector('.peek-sub').textContent = track.artist.toLowerCase()
+    })
+    .catch(() => {})
+}
+
 // Place marquees: duplicate each list once (hidden from screen readers) so
 // shifting the track by half loops seamlessly.
 document.querySelectorAll('.places-track').forEach((track) => {

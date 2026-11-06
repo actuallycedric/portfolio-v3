@@ -729,7 +729,7 @@ h2 {
   display: flex;
   gap: 1.5rem;
   width: max-content;
-  animation: scroll 26s linear infinite;
+  animation: scroll 25s linear infinite;
   will-change: transform;
   backface-visibility: hidden;
 }
@@ -891,6 +891,15 @@ h2 {
   line-height: 1.25;
   letter-spacing: -0.02em;
   color: var(--ink);
+}
+
+.peek-title a {
+  color: inherit;
+  text-decoration: none;
+}
+.peek-title a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
 }
 
 .peek-sub {
