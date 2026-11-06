@@ -870,12 +870,7 @@ h2 {
   object-fit: cover;
 }
 
-/* same image width on both cards so their text lines up */
-.peek-poster {
-  width: 4rem;
-  height: 5.9rem;
-}
-
+/* both cards use the same square image so they match */
 .peek-cover {
   width: 5.9rem;
   height: 5.9rem;
