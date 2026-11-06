@@ -24,6 +24,25 @@ async function accessToken() {
   return (await res.json()).access_token
 }
 
+// Drop guest credits from a track title: they're already in the artist list.
+// "wat's wrong (feat. zacari & kendrick lamar)" -> "wat's wrong"
+// "Sacrifices (with EARTHGANG & J. Cole feat. Smino & Saba)" -> "Sacrifices"
+// feat/ft/featuring groups always go. "(with ...)" only goes when it names a
+// credited artist, so a title like "Stay (With Me)" survives. Other brackets
+// ("(Remix)", "[Live]") are kept.
+export function cleanTitle(title, artists = []) {
+  const names = artists.map((a) => a.toLowerCase())
+  const credits = (text) => names.some((name) => text.toLowerCase().includes(name))
+
+  return title
+    .replace(/\s*[([]\s*(feat\.?|ft\.?|featuring|with)\s+([^)\]]*)[)\]]/gi, (group, word, rest) =>
+      word.toLowerCase() === 'with' && !credits(rest) ? group : '',
+    )
+    .replace(/\s+-\s+(feat\.?|ft\.?|featuring)\s.*$/i, '') // "song - feat. x"
+    .replace(/\s{2,}/g, ' ')
+    .trim()
+}
+
 export async function GET() {
   try {
     const res = await fetch(RECENT_URL, {
@@ -41,7 +60,10 @@ export async function GET() {
 
     return Response.json(
       {
-        title: track.name,
+        title: cleanTitle(
+          track.name,
+          track.artists.map((a) => a.name),
+        ),
         artist: track.artists.map((a) => a.name).join(', '),
         album: track.album.name,
         image: image?.url ?? null,

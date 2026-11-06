@@ -67,7 +67,7 @@ if (lastPlayed) {
   fetch('/api/spotify')
     .then((res) => (res.ok ? res.json() : Promise.reject(new Error(res.status))))
     .then((track) => {
-      const cover = lastPlayed.querySelector('.peek-cover')
+      const cover = lastPlayed.querySelector('.vinyl-label')
       const link = lastPlayed.querySelector('.peek-title a')
       if (track.image) {
         cover.src = track.image
@@ -103,6 +103,10 @@ if (subway && stations.length > 1) {
   const MARKER = 0.6 // fraction of the viewport height
   const main = subway.parentElement
   let stops = [] // circle centres (y, relative to <main>)
+  const sections = stations.map((s) => s.closest('.section'))
+  // opt in to section-gated carousels only once this script is running, so
+  // they still scroll if the js never loads
+  main.classList.add('sections-tracked')
 
   const segments = stations.slice(1).map(() => {
     const track = document.createElementNS(NS, 'line')
@@ -165,8 +169,16 @@ if (subway && stations.length > 1) {
       const filled = Math.min(Math.max(marker - seg.y1, 0), seg.length)
       seg.lit.style.strokeDashoffset = seg.length - filled
     })
+    // the section you're "on" is the last stop the marker has reached; its
+    // carousels run, every other section's are paused (see .current in css)
+    let current = -1
     stations.forEach((station, i) => {
-      station.classList.toggle('lit', marker >= stops[i])
+      const reached = marker >= stops[i]
+      station.classList.toggle('lit', reached)
+      if (reached) current = i
+    })
+    sections.forEach((section, i) => {
+      section?.classList.toggle('current', i === current)
     })
   }
 
