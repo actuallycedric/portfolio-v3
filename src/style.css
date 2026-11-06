@@ -729,7 +729,7 @@ h2 {
   display: flex;
   gap: 1.5rem;
   width: max-content;
-  animation: scroll 23s linear infinite;
+  animation: scroll 28s linear infinite;
   will-change: transform;
   backface-visibility: hidden;
 }
