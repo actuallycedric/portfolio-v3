@@ -368,14 +368,6 @@ h1 {
   backface-visibility: hidden;
 }
 
-/* pause on hover only for real pointers; a tap leaves :hover stuck on mobile
-   and would freeze the marquee */
-@media (hover: hover) and (pointer: fine) {
-  .places:hover .places-track {
-    animation-play-state: paused;
-  }
-}
-
 .places li {
   flex: none;
   font-size: 1.0625rem;
@@ -400,8 +392,8 @@ h1 {
 }
 
 /* main.js marks the section the subway line is currently on with .current;
-   carousels anywhere else hold still */
-.sections-tracked .section:not(.current) :is(.places-track, .carousel-track) {
+   marquees anywhere else hold still */
+.sections-tracked .section:not(.current) .places-track {
   animation-play-state: paused;
 }
 
@@ -725,32 +717,54 @@ h2 {
 }
 
 /* ---------- photo carousel ---------- */
+/* a native sideways scroller: swipe on touch, trackpad or shift+wheel on a
+   computer, plus drag with a mouse and the arrow buttons (see main.js). the
+   edge fades only show on a side that has more photos to reveal. */
 .carousel {
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  --fade-l: 0%;
+  --fade-r: 6%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  border-radius: 0.5rem;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent);
+}
+
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel.past-start {
+  --fade-l: 6%;
+}
+
+.carousel.at-end {
+  --fade-r: 0%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .carousel {
+    cursor: grab;
+  }
+  .carousel.dragging {
+    cursor: grabbing;
+    scroll-snap-type: none;
+    user-select: none;
+  }
 }
 
 .carousel-track {
   display: flex;
   gap: 1.5rem;
   width: max-content;
-  animation: scroll 25s linear infinite;
-  will-change: transform;
-  backface-visibility: hidden;
-}
-
-/* pause on hover only for devices that truly hover; touch taps leave
-   :hover stuck on and would freeze the scroll */
-@media (hover: hover) and (pointer: fine) {
-  .carousel:hover .carousel-track {
-    animation-play-state: paused;
-  }
 }
 
 .carousel figure {
   flex: none;
   width: 16rem;
+  scroll-snap-align: start;
 }
 
 .carousel img {
@@ -760,11 +774,65 @@ h2 {
   border-radius: 0.5rem;
 }
 
-/* the track holds two identical sets; shifting by half loops seamlessly */
-@keyframes scroll {
-  to {
-    transform: translateX(calc(-50% - 0.75rem));
+/* progress line (how far along you are) and prev/next arrows under the photos */
+.carousel-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.carousel-progress {
+  flex: 1;
+  height: 2px;
+  margin-right: 0.75rem;
+  overflow: hidden;
+  border-radius: 1px;
+  background: var(--rule);
+}
+
+.carousel-progress span {
+  display: block;
+  width: var(--thumb, 30%);
+  height: 100%;
+  border-radius: inherit;
+  background: var(--ink);
+  transform: translateX(var(--offset, 0%));
+}
+
+.carousel-btn {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, opacity 0.2s;
+}
+
+.carousel-btn svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (hover: hover) {
+  .carousel-btn:not(:disabled):hover {
+    border-color: var(--ink);
   }
+}
+
+.carousel-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
 }
 
 /* ---------- connections ---------- */
@@ -1031,19 +1099,16 @@ h2 {
   .rise {
     animation: none;
   }
-  .places,
-  .carousel {
+  .places {
     overflow-x: auto;
     -webkit-mask-image: none;
     mask-image: none;
   }
   .places-track,
-  .carousel-track,
   .vinyl-disc {
     animation: none;
   }
-  .places li[aria-hidden="true"],
-  .carousel figure[aria-hidden="true"] {
+  .places li[aria-hidden="true"] {
     display: none;
   }
   .station,

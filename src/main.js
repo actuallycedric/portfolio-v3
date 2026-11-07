@@ -90,6 +90,94 @@ document.querySelectorAll('.places-track').forEach((track) => {
   }
 })
 
+// Photo carousel: a native horizontal scroller. This adds the extras a plain
+// overflow box lacks: prev/next buttons, a progress line, edge fades that only
+// show where there's more to see, and click-and-drag for mouse users.
+document.querySelectorAll('.gallery').forEach((gallery) => {
+  const scroller = gallery.querySelector('.carousel')
+  const thumb = gallery.querySelector('.carousel-progress span')
+  const [prev, next] = gallery.querySelectorAll('.carousel-btn')
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)')
+  const behavior = () => (reduceMotion.matches ? 'auto' : 'smooth')
+
+  const update = () => {
+    const max = scroller.scrollWidth - scroller.clientWidth
+    const x = scroller.scrollLeft
+    const atStart = x <= 1
+    const atEnd = x >= max - 1
+    scroller.classList.toggle('past-start', !atStart)
+    scroller.classList.toggle('at-end', atEnd)
+    prev.disabled = atStart
+    next.disabled = atEnd
+    // thumb width = visible share of the strip; offset slides it along the rest
+    const share = scroller.clientWidth / scroller.scrollWidth
+    const progress = max > 0 ? x / max : 0
+    thumb.style.setProperty('--thumb', `${share * 100}%`)
+    thumb.style.setProperty('--offset', `${progress * (1 / share - 1) * 100}%`)
+  }
+
+  // one step = the photos that fully fit, so nothing gets skipped
+  const step = () => {
+    const fig = scroller.querySelector('figure')
+    const gap = parseFloat(getComputedStyle(fig.parentElement).columnGap) || 0
+    const per = fig.offsetWidth + gap
+    return Math.max(1, Math.floor((scroller.clientWidth + gap) / per)) * per
+  }
+
+  for (const button of [prev, next]) {
+    button.addEventListener('click', () => {
+      scroller.scrollBy({ left: Number(button.dataset.dir) * step(), behavior: behavior() })
+    })
+  }
+
+  // arrow keys once the strip has focus
+  scroller.addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return
+    e.preventDefault()
+    scroller.scrollBy({ left: (e.key === 'ArrowRight' ? 1 : -1) * step(), behavior: behavior() })
+  })
+
+  // mouse drag (touch and trackpads already scroll natively)
+  let drag = null
+  scroller.addEventListener('pointerdown', (e) => {
+    if (e.pointerType !== 'mouse' || e.button !== 0) return
+    drag = { x: e.clientX, left: scroller.scrollLeft, moved: false }
+    scroller.setPointerCapture(e.pointerId)
+  })
+  scroller.addEventListener('pointermove', (e) => {
+    if (!drag) return
+    const dx = e.clientX - drag.x
+    if (!drag.moved && Math.abs(dx) < 4) return
+    drag.moved = true
+    scroller.classList.add('dragging')
+    scroller.scrollLeft = drag.left - dx
+  })
+  const endDrag = () => {
+    if (!drag) return
+    const moved = drag.moved
+    drag = null
+    if (!moved) return
+    // snapping is off mid-drag; glide to the nearest photo, then turn it back on
+    const fig = scroller.querySelector('figure')
+    const gap = parseFloat(getComputedStyle(fig.parentElement).columnGap) || 0
+    const per = fig.offsetWidth + gap
+    const target = Math.round(scroller.scrollLeft / per) * per
+    scroller.scrollTo({ left: target, behavior: behavior() })
+    const restore = () => scroller.classList.remove('dragging')
+    // scrollend never fires if we're already on target, hence the timeout too
+    scroller.addEventListener('scrollend', restore, { once: true })
+    setTimeout(restore, 500)
+  }
+  scroller.addEventListener('pointerup', endDrag)
+  scroller.addEventListener('pointercancel', endDrag)
+
+  scroller.addEventListener('scroll', update, { passive: true })
+  addEventListener('resize', update)
+  // images are lazy, so the strip's width settles as they load
+  scroller.querySelectorAll('img').forEach((img) => img.addEventListener('load', update))
+  update()
+})
+
 // Subway line: connect the numbered section circles marked .station with a
 // track, and fill it in as you scroll. A marker sits 60% of the way down the
 // viewport; every bit of track above it is lit and every stop it has passed
