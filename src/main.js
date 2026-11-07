@@ -59,7 +59,7 @@ document.querySelectorAll('.copy-email').forEach((button) => {
   })
 })
 
-// Last played on spotify: swap the fallback card's contents for the real
+// Spotify (playing now, else last played): swap the fallback card's contents for the real
 // track. Any failure (no env vars, spotify down) just leaves the fallback.
 const lastPlayed = document.querySelector('#last-played')
 
@@ -76,6 +76,7 @@ if (lastPlayed) {
       link.href = track.url
       link.textContent = track.title.toLowerCase()
       lastPlayed.querySelector('.peek-sub').textContent = track.artist.toLowerCase()
+      lastPlayed.querySelector('.peek-label').textContent = track.isPlaying ? 'listening to' : 'last played'
     })
     .catch(() => {})
 }

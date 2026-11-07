@@ -24,7 +24,7 @@ const authUrl =
     client_id: id,
     response_type: 'code',
     redirect_uri: REDIRECT,
-    scope: 'user-read-recently-played',
+    scope: 'user-read-recently-played user-read-currently-playing',
   })
 
 const server = createServer(async (req, res) => {

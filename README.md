@@ -10,9 +10,9 @@ reworked portfolio with static js - plain html, css and a few lines of javascrip
 - `public/icons.svg` - skill icon sprite (from simple-icons, cc0)
 - `public/photos/` - favourite movie artwork
 
-## last played on spotify
+## spotify
 
-`api/spotify.js` is a vercel function that returns the most recently played track; `src/main.js` fills the card with it (baby boy shows if it fails). in dev, `vite.config.js` serves the same handler.
+`api/spotify.js` is a vercel function that returns the track playing right now, or the most recently played one if nothing is playing; `src/main.js` fills the card with it (baby boy shows if it fails). in dev, `vite.config.js` serves the same handler.
 
 setup (once):
 

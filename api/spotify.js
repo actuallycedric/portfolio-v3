@@ -1,10 +1,12 @@
-// Vercel function: GET /api/spotify -> the last track played on spotify.
+// Vercel function: GET /api/spotify -> the track playing on spotify right now,
+// or the last one played if nothing is playing.
 //
 // Needs three env vars (vercel project settings, or .env.local for dev):
 //   SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN
 // The refresh token comes from `npm run spotify-token` (one-time setup).
 
 const TOKEN_URL = 'https://accounts.spotify.com/api/token'
+const NOW_URL = 'https://api.spotify.com/v1/me/player/currently-playing'
 const RECENT_URL = 'https://api.spotify.com/v1/me/player/recently-played?limit=1'
 
 async function accessToken() {
@@ -43,17 +45,29 @@ export function cleanTitle(title, artists = []) {
     .trim()
 }
 
+// The track playing right now, or null (nothing playing, an ad/podcast, or the
+// request failed) so the caller falls back to recently played.
+async function nowPlaying(token) {
+  const res = await fetch(NOW_URL, { headers: { Authorization: `Bearer ${token}` } })
+  if (res.status !== 200) return null
+  const data = await res.json()
+  return data.is_playing && data.currently_playing_type === 'track' ? data.item : null
+}
+
+async function lastPlayed(token) {
+  const res = await fetch(RECENT_URL, { headers: { Authorization: `Bearer ${token}` } })
+  if (!res.ok) throw new Error(`recently-played failed: ${res.status}`)
+  const track = (await res.json()).items?.[0]?.track
+  if (!track) throw new Error('no recent tracks')
+  return track
+}
+
 export async function GET() {
   try {
-    const res = await fetch(RECENT_URL, {
-      headers: { Authorization: `Bearer ${await accessToken()}` },
-    })
-    if (!res.ok) throw new Error(`recently-played failed: ${res.status}`)
+    const token = await accessToken()
+    const current = await nowPlaying(token).catch(() => null)
+    const track = current ?? (await lastPlayed(token))
 
-    const item = (await res.json()).items?.[0]
-    if (!item) throw new Error('no recent tracks')
-
-    const { track, played_at: playedAt } = item
     // album images come largest first; ~300px is plenty for the 6rem cover
     const images = track.album.images
     const image = images.find((img) => img.width <= 300) ?? images[0]
@@ -68,10 +82,10 @@ export async function GET() {
         album: track.album.name,
         image: image?.url ?? null,
         url: track.external_urls.spotify,
-        playedAt,
+        isPlaying: Boolean(current),
       },
-      // the CDN serves one copy for a minute, so visitors don't each hit spotify
-      { headers: { 'Cache-Control': 's-maxage=60, stale-while-revalidate=300' } },
+      // the CDN serves one copy for 30s, so visitors don't each hit spotify
+      { headers: { 'Cache-Control': 's-maxage=30, stale-while-revalidate=300' } },
     )
   } catch (err) {
     console.error(err)
