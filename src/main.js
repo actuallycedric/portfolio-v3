@@ -1,21 +1,4 @@
-// Footer year stays current without editing the html each january.
-document.querySelectorAll('.year').forEach((el) => {
-  el.textContent = new Date().getFullYear()
-})
-
-// Light/dark toggle: flips whatever is showing now (saved choice or system
-// default) and remembers the choice.
-const root = document.documentElement
-const systemDark = matchMedia('(prefers-color-scheme: dark)')
-
-document.querySelector('.theme-toggle').addEventListener('click', () => {
-  const current = root.dataset.theme ?? (systemDark.matches ? 'dark' : 'light')
-  const next = current === 'dark' ? 'light' : 'dark'
-  root.dataset.theme = next
-  try {
-    localStorage.setItem('theme', next)
-  } catch {}
-})
+import './theme.js'
 
 // Email row: copy the address and flash "copied" in place of "copy".
 // navigator.clipboard only exists on https/localhost, so fall back to the

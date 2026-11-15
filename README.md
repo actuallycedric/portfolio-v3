@@ -9,6 +9,21 @@ reworked portfolio with static js - plain html, css and a few lines of javascrip
 - `src/main.js` - runs the light/dark toggle
 - `public/icons.svg` - skill icon sprite (from simple-icons, cc0)
 - `public/photos/` - favourite movie artwork
+- `src/theme.js` - light/dark toggle, shared by every page
+
+## neetcode 150 (`/leetcode`)
+
+a hidden section: the `</>` icon in the top bar is the only link to it, and the pages are `noindex`.
+
+- `data/neetcode150.json` - the 150 problems (title, topic, difficulty, link, order within topic)
+- `data/topics.json` - the 18 topics, their roadmap position (x/y) and prereq edges
+- `content/leetcode/<slug>.md` - my solution for a problem; no file = not started
+- `scripts/leetcode/` - validation (`lib.mjs`), page generator (`build.mjs`), scaffold (`new.mjs`)
+- `src/leetcode.css`, `src/leetcode.js` - styles, search (ctrl/cmd+k or /), j/k paging
+
+new solution: `npm run lc two-sum` creates `content/leetcode/two-sum.md` with `status: attempted`; change it to `solved` (or `review` to flag a redo) when done.
+
+`vite build` generates the pages into `leetcode/` (git-ignored) before bundling and fails with a list of problems if the catalog counts, slugs, statuses or topic prereqs don't check out. `npm run dev` regenerates them whenever `content/` or `data/` changes.
 
 ## spotify
 

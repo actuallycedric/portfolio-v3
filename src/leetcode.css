@@ -1,0 +1,657 @@
+/* /leetcode pages. Builds on style.css tokens (--bg, --ink, --text,
+   --text-faint, --rule, --accent); ink is the strong colour, sage the fill. */
+:root {
+  /* --text-faint is too light for small text on cream; same hue, AA contrast */
+  --muted: light-dark(#706750, var(--text-faint));
+  --line: color-mix(in srgb, var(--text-faint) 55%, transparent);
+  --easy: light-dark(#6f8a3a, #a3b86f);
+  --medium: light-dark(#c4962d, #d9b45c);
+  --hard: light-dark(#b4553e, #d6806a);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+code,
+kbd,
+pre {
+  font-family: var(--mono);
+}
+
+kbd {
+  display: inline-block;
+  min-width: 1.4em;
+  padding: 0 0.3em;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.lc {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 4.5rem) 0 5rem;
+}
+
+.lc h1 {
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.lc-sep {
+  color: var(--muted);
+}
+
+.lc-num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- header + progress ---------- */
+.lc-progress {
+  height: 3px;
+  margin-top: 1.25rem;
+  border-radius: 3px;
+  background: var(--rule);
+  overflow: hidden;
+}
+
+.lc-progress span {
+  display: block;
+  height: 100%;
+  background: var(--ink);
+}
+
+/* ---------- roadmap ---------- */
+.lc-roadmap {
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+}
+
+.lc-roadmap svg {
+  display: block;
+  width: 100%;
+  max-width: 50rem;
+  height: auto;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+.rm-edges line {
+  stroke: var(--line);
+  stroke-width: 1.25;
+}
+
+.rm-node {
+  outline: none;
+}
+
+.rm-box {
+  fill: var(--bg);
+  stroke: var(--line);
+  stroke-width: 1.25;
+  transition: stroke 150ms, fill 150ms;
+}
+
+.rm-label {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  fill: var(--muted);
+}
+
+.rm-count {
+  font-family: var(--mono);
+  font-size: 11px;
+  fill: var(--muted);
+}
+
+.rm-track {
+  fill: var(--rule);
+}
+
+.rm-fill {
+  fill: var(--ink);
+}
+
+.rm-node[data-state="active"] .rm-box {
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+
+.rm-node[data-state="done"] .rm-box {
+  fill: var(--accent);
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+
+.rm-node:is([data-state="active"], [data-state="done"]) :is(.rm-label, .rm-count) {
+  fill: var(--ink);
+}
+
+.rm-node[data-state="done"] .rm-track {
+  fill: transparent;
+}
+
+.rm-node:hover .rm-box {
+  stroke: var(--ink);
+}
+
+.rm-node:focus-visible .rm-box {
+  stroke: var(--ink);
+  stroke-width: 2.5;
+}
+
+/* the graphic is a bonus; small screens get just the checklist */
+@media (max-width: 639px) {
+  .lc-roadmap {
+    display: none;
+  }
+}
+
+/* ---------- checklist ---------- */
+.lc-list {
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+}
+
+.lc-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.lc-filters {
+  display: flex;
+  gap: 0.375rem;
+  border: 0;
+}
+
+.lc-filters label,
+.lc-search-open {
+  position: relative;
+  padding: 0.2rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 150ms, background 150ms;
+}
+
+.lc-filters input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.lc-filters label:hover,
+.lc-search-open:hover {
+  border-color: var(--ink);
+}
+
+.lc-filters label:has(input:checked) {
+  border-color: var(--ink);
+  background: var(--accent);
+  color: var(--ink);
+}
+
+.lc-filters label:has(input:focus-visible) {
+  outline: 1.5px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.lc-search-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  font-family: inherit;
+}
+
+.lc-search-open[hidden] {
+  display: none;
+}
+
+.lc-search-open kbd {
+  border: 0;
+  padding: 0;
+  min-width: 0;
+  color: var(--muted);
+}
+
+.lc-topic {
+  border-bottom: 1px solid var(--rule);
+  scroll-margin-top: 1.5rem;
+}
+
+.lc-topic:first-of-type {
+  border-top: 1px solid var(--rule);
+}
+
+.lc-topic summary {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.9rem 0;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  list-style: none;
+}
+
+.lc-topic summary::-webkit-details-marker {
+  display: none;
+}
+
+.lc-topic summary::before {
+  content: "›";
+  display: inline-block;
+  width: 0.75rem;
+  color: var(--muted);
+  transition: transform 150ms;
+}
+
+.lc-topic[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.lc-topic-count {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.lc-topic:is([data-state="active"], [data-state="done"]) .lc-topic-count {
+  color: var(--ink);
+}
+
+.lc-rows {
+  list-style: none;
+  padding: 0 0 1rem 1.5rem;
+}
+
+.lc-row {
+  display: grid;
+  grid-template-columns: 1.1rem minmax(0, 1fr) auto auto 1rem;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.45rem 0;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.lc-row + .lc-row {
+  border-top: 1px dashed var(--rule);
+}
+
+/* status box: display only, derived from the solution file's status */
+.lc-check {
+  display: inline-grid;
+  place-items: center;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 1.25px solid var(--line);
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.lc-check:not([data-status="todo"]) {
+  border-color: var(--ink);
+}
+
+.lc-check:is([data-status="solved"], [data-status="review"]) {
+  background: var(--accent);
+}
+
+.lc-title {
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+a.lc-title {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+a.lc-title:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.lc-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--easy);
+}
+
+.lc-dot[data-difficulty="medium"] {
+  background: var(--medium);
+}
+
+.lc-dot[data-difficulty="hard"] {
+  background: var(--hard);
+}
+
+.lc-out {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  /* 24px tall target without changing the row height */
+  padding: 0.3rem 0.1rem;
+  margin: -0.3rem -0.1rem;
+}
+
+.lc-out:hover,
+.lc-go:hover {
+  color: var(--ink);
+}
+
+.lc-go {
+  color: var(--muted);
+  text-align: right;
+}
+
+/* filters: pure css so they work before (or without) js */
+.lc:has(input[value="unsolved"]:checked) .lc-row:is([data-status="solved"], [data-status="review"]),
+.lc:has(input[value="unsolved"]:checked) .lc-topic:not(:has(.lc-row:is([data-status="todo"], [data-status="attempted"]))),
+.lc:has(input[value="review"]:checked) .lc-row:not([data-status="review"]),
+.lc:has(input[value="review"]:checked) .lc-topic:not(:has(.lc-row[data-status="review"])) {
+  display: none;
+}
+
+.lc-none {
+  display: none;
+  padding: 1.5rem 0;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.lc:has(input[value="unsolved"]:checked):not(:has(.lc-row:is([data-status="todo"], [data-status="attempted"]))) .lc-none,
+.lc:has(input[value="review"]:checked):not(:has(.lc-row[data-status="review"])) .lc-none {
+  display: block;
+}
+
+/* ---------- solution page ---------- */
+.lc-solution {
+  max-width: 46rem;
+}
+
+.lc-sol-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.lc-sol-status .lc-check {
+  letter-spacing: 0;
+}
+
+.lc-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.6rem;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: var(--text);
+}
+
+.lc-meta > a:not(.lc-out) {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 0.2em;
+}
+
+.lc-meta .lc-dot {
+  margin-right: 0.35rem;
+}
+
+.lc-meta code {
+  font-size: 0.8125rem;
+  color: var(--ink);
+}
+
+.lc-k {
+  color: var(--muted);
+}
+
+.lc-meta .lc-out {
+  font-size: 0.8125rem;
+}
+
+.lc-prose {
+  margin-top: 2.5rem;
+}
+
+.lc-prose h2 {
+  margin: 2.5rem 0 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.lc-prose h3 {
+  margin: 1.75rem 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.lc-prose > :first-child {
+  margin-top: 0;
+}
+
+.lc-prose p,
+.lc-prose ul,
+.lc-prose ol {
+  margin: 0.75rem 0;
+}
+
+.lc-prose ul,
+.lc-prose ol {
+  padding-left: 1.25rem;
+}
+
+.lc-prose ul {
+  list-style: disc;
+}
+
+.lc-prose li::marker {
+  color: var(--muted);
+}
+
+.lc-prose a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.lc-prose strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.lc-prose :not(pre) > code {
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--rule) 55%, transparent);
+  font-size: 0.85em;
+  color: var(--ink);
+}
+
+.lc-prose pre {
+  margin: 1rem 0;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--rule) 30%, var(--bg));
+  font-size: 0.8125rem;
+  line-height: 1.65;
+  overflow-x: auto;
+  tab-size: 4;
+}
+
+/* shiki dual theme: each token carries both colours, the page's scheme picks */
+.lc-prose .shiki span {
+  color: light-dark(var(--shiki-light), var(--shiki-dark));
+}
+
+.lc-pager {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 1rem;
+  align-items: baseline;
+  max-width: 46rem;
+  margin-top: 4rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.875rem;
+}
+
+.lc-pager a {
+  color: var(--text);
+}
+
+.lc-pager a:hover {
+  color: var(--ink);
+}
+
+.lc-back {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  text-align: center;
+}
+
+.lc-next {
+  text-align: right;
+}
+
+@media (max-width: 639px) {
+  .lc-pager {
+    grid-template-columns: 1fr 1fr;
+  }
+  .lc-back {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+/* ---------- quick-jump search ---------- */
+.lc-search {
+  width: min(34rem, calc(100% - 2rem));
+  max-height: min(30rem, 80vh);
+  margin: 12vh auto auto;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.lc-search::backdrop {
+  background: color-mix(in srgb, #171912 35%, transparent);
+}
+
+.lc-search-input {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  background: none;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  outline: none;
+}
+
+.lc-search-input::placeholder {
+  color: var(--muted);
+}
+
+.lc-results {
+  max-height: min(20rem, 55vh);
+  overflow-y: auto;
+  list-style: none;
+  padding: 0.375rem 0;
+}
+
+.lc-results:empty {
+  display: none;
+}
+
+.lc-result {
+  display: grid;
+  grid-template-columns: 1.1rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.9375rem;
+  cursor: pointer;
+}
+
+.lc-result[aria-selected="true"] {
+  background: color-mix(in srgb, var(--accent) 60%, transparent);
+  color: var(--ink);
+}
+
+.lc-result-where {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.lc-empty {
+  padding: 0.75rem 1.25rem;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.lc-search-hint {
+  padding: 0.6rem 1.25rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+@media (hover: none) {
+  .lc-search-hint,
+  .lc-search-open kbd {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lc-topic summary::before,
+  .rm-box {
+    transition: none;
+  }
+}

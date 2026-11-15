@@ -1,4 +1,5 @@
 @import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
 
 /* ---------- tokens ---------- */
 :root {
@@ -15,6 +16,7 @@
   --accent: light-dark(var(--sage), #3c4430);
 
   --sans: "Geist Variable", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  --mono: "Geist Mono Variable", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 
   /* follow the system unless the toggle picked a theme */
@@ -222,6 +224,102 @@ em {
 @media (max-width: 640px) {
   .nav-links {
     display: none;
+  }
+}
+
+/* small phones: tighten the bar so the name stays on one line next to
+   connect, the theme toggle and the </> icon */
+@media (max-width: 400px) {
+  .topbar {
+    gap: 0.75rem;
+  }
+  .brand {
+    white-space: nowrap;
+  }
+  .nav-icons {
+    gap: 0.625rem;
+  }
+  .nav-icons .nav-connect {
+    padding: 0.35rem 0.7rem;
+  }
+  .nav-icons .nav-connect svg {
+    display: none;
+  }
+}
+
+/* "</>" in the top bar: the only way into /leetcode (and back out of it).
+   40px hit area around a 20px icon; negative margins keep the bar's height
+   and line the icon up with the page edge. */
+.nav-icons .lc-entry {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  margin: -8px -10px;
+  display: grid;
+  place-items: center;
+  color: var(--text-faint);
+  opacity: 0.6;
+  transition: color 150ms, opacity 150ms;
+}
+
+.nav-icons .lc-entry svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+}
+
+.nav-icons .lc-entry:hover,
+.nav-icons .lc-entry:focus-visible {
+  color: var(--ink);
+  opacity: 1;
+}
+
+.nav-icons .lc-entry:focus-visible {
+  outline-offset: -5px;
+  border-radius: 6px;
+}
+
+/* tooltip hangs below, right-aligned to the icon, so it grows leftward and
+   never runs off the right edge */
+.lc-entry-tip {
+  position: absolute;
+  top: calc(100% + 2px);
+  right: 10px;
+  z-index: 10;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid color-mix(in srgb, var(--text-faint) 55%, transparent);
+  border-radius: 6px;
+  background: var(--bg);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  white-space: nowrap;
+  color: var(--text);
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 150ms, transform 150ms;
+  pointer-events: none;
+}
+
+.lc-entry:hover .lc-entry-tip,
+.lc-entry:focus-visible .lc-entry-tip {
+  opacity: 1;
+  transform: none;
+}
+
+@media (hover: none) {
+  .lc-entry-tip {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-icons .lc-entry,
+  .lc-entry-tip {
+    transition: none;
+  }
+  .lc-entry-tip {
+    transform: none;
   }
 }
 
