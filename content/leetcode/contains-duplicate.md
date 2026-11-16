@@ -7,19 +7,19 @@ space: O(n)
 lang: python
 ---
 ## Approach
-Add each number to a set; if it's already there, there's a duplicate.
+add each number to a set, if it's already there, there's a duplicate.
 
 ## Code
 
 ```python
-class Solution:
-    def containsDuplicate(self, nums: list[int]) -> bool:
-        seen = set()
-        for n in nums:
-            if n in seen:
-                return True
-            seen.add(n)
-        return False
+seen = set()
+
+for n in nums:
+    if n in seen:
+        return True
+    seen.add(n)
+
+return False
 ```
 
 ## Notes
