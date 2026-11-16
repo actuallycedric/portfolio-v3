@@ -7,10 +7,7 @@ space: O(1)
 lang: python
 ---
 ## Approach
-for each string in the list of strings, create a list that tallies the frequency of each character
-use ord(ch) - 97 to get a starting at index 0, b at index 1, etc
-save each map as a defaultdict key by parsing it to a tuple
-return a list of lists by returning list(dict.values()
+for each string in the list of strings, create a list that tallies the frequency of each character. use ord(ch) - 97 to get a starting at index 0, b at index 1, etc. save each map as a defaultdict key by parsing it to a tuple. return a list of lists by returning list(dict.values())
 
 ## Code
 
@@ -28,7 +25,6 @@ for s in strs:
 	res[tuple(freq)].append(s)
 
 return list(res.values())
-
 ```
 
 ## Notes
