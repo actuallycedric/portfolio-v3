@@ -1,6 +1,6 @@
 ---
 slug: contains-duplicate
-status: review        # solved | attempted | review
+status: review   # solved | attempted | review
 date: 2026-11-14
 time: O(n)
 space: O(n)
@@ -23,4 +23,4 @@ return False
 ```
 
 ## Notes
-Redo without looking: the one-liner `len(set(nums)) < len(nums)` is shorter but can't exit early.
+
