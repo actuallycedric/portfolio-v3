@@ -19,9 +19,15 @@ a hidden section: the `</>` icon in the top bar is the only link to it, and the 
 - `data/topics.json` - the 18 topics, their roadmap position (x/y) and prereq edges
 - `content/leetcode/<slug>.md` - my solution for a problem; no file = not started
 - `scripts/leetcode/` - validation (`lib.mjs`), page generator (`build.mjs`), scaffold (`new.mjs`)
+- `api/leetcode.js`, `src/leetcode-edit.js` - the editor's save endpoint and form
 - `src/leetcode.css`, `src/leetcode.js` - styles, search (ctrl/cmd+k or /), j/k paging
 
 new solution: `npm run lc two-sum` creates `content/leetcode/two-sum.md` with `status: attempted`; change it to `solved` (or `review` to flag a redo) when done.
+
+editor: `/leetcode/edit/` (or press `e` on any leetcode page) is a password-locked form with a problem picker. it loads the existing file if there is one and saves through `api/leetcode.js`: in production that commits `content/leetcode/<slug>.md` to github, which redeploys the site; under `npm run dev` it writes the file locally instead. needs these env vars (vercel project settings, and `LC_PASSWORD` in `.env.local` for dev):
+
+- `LC_PASSWORD` - the editor password; use a long one, there's no rate limit beyond a delay on wrong guesses
+- `GITHUB_TOKEN` - fine-grained token, this repo only, repository permission "Contents: read and write"
 
 `vite build` generates the pages into `leetcode/` (git-ignored) before bundling and fails with a list of problems if the catalog counts, slugs, statuses or topic prereqs don't check out. `npm run dev` regenerates them whenever `content/` or `data/` changes.
 

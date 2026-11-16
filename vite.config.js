@@ -4,18 +4,32 @@ import { defineConfig, loadEnv } from 'vite'
 import { generate } from './scripts/leetcode/build.mjs'
 
 // Vercel runs api/*.js as functions in production; the vite dev server
-// doesn't, so this routes /api/spotify to the same handler during `npm run dev`.
+// doesn't, so this routes /api/<name> to the same handlers during `npm run dev`.
 function devApi() {
   return {
     name: 'dev-api',
     configureServer(server) {
-      server.middlewares.use('/api/spotify', async (_req, res) => {
-        const { GET } = await server.ssrLoadModule('/api/spotify.js')
-        const response = await GET()
-        res.statusCode = response.status
-        res.setHeader('Content-Type', 'application/json')
-        res.end(await response.text())
-      })
+      for (const name of ['spotify', 'leetcode']) {
+        server.middlewares.use(`/api/${name}`, async (req, res) => {
+          const handlers = await server.ssrLoadModule(`/api/${name}.js`)
+          const handler = handlers[req.method]
+          if (!handler) {
+            res.statusCode = 405
+            return res.end()
+          }
+          const chunks = []
+          for await (const chunk of req) chunks.push(chunk)
+          const request = new Request(new URL(req.originalUrl ?? req.url, 'http://localhost'), {
+            method: req.method,
+            headers: { authorization: req.headers.authorization ?? '', 'content-type': req.headers['content-type'] ?? '' },
+            body: chunks.length ? Buffer.concat(chunks) : undefined,
+          })
+          const response = await handler(request)
+          res.statusCode = response.status
+          res.setHeader('Content-Type', 'application/json')
+          res.end(await response.text())
+        })
+      }
     },
   }
 }
@@ -73,10 +87,12 @@ function leetcodePages() {
 }
 
 // https://vite.dev/config/
-export default defineConfig(({ mode }) => {
-  // expose .env.local (no VITE_ prefix needed) to the dev api handler only;
+export default defineConfig(({ command, mode }) => {
+  // expose .env.local (no VITE_ prefix needed) to the dev api handlers only;
   // it never reaches the browser bundle
-  Object.assign(process.env, loadEnv(mode, process.cwd(), 'SPOTIFY_'))
+  Object.assign(process.env, loadEnv(mode, process.cwd(), ['SPOTIFY_', 'LC_', 'GITHUB_']))
+  // in dev the editor saves to content/leetcode/ instead of committing
+  if (command === 'serve') process.env.LC_WRITE ??= 'local'
 
   return {
     plugins: [devApi(), leetcodePages()],

@@ -1,6 +1,7 @@
 // /leetcode pages: quick-jump search, roadmap/hash -> open topic, filter
 // helpers, and prev/next keys on solution pages. Everything else is static.
 import './theme.js'
+import { score } from './lc-match.js'
 
 const GLYPH = { solved: '✓', attempted: '½', review: '↻', todo: '' }
 const STATUS_LABEL = { solved: 'solved', attempted: 'attempted', review: 'review', todo: 'not started' }
@@ -48,26 +49,6 @@ const problems = JSON.parse(document.getElementById('lc-data').textContent).map(
 }))
 let results = []
 let active = 0
-
-// lower is better; null = no match. Substring hits beat subsequence hits,
-// earlier and word-start hits beat later ones.
-function score(lower, q) {
-  const at = lower.indexOf(q)
-  if (at === 0) return 0
-  if (at > 0) return (/\W/.test(lower[at - 1]) ? 1 : 2) + at / 1000
-  let i = 0
-  let gaps = 0
-  let last = -1
-  const chars = q.replace(/\s+/g, '')
-  for (const c of chars) {
-    const found = lower.indexOf(c, last + 1)
-    if (found === -1) return null
-    if (last !== -1) gaps += found - last - 1
-    last = found
-    i++
-  }
-  return i ? 10 + gaps / 100 : null
-}
 
 function search(q) {
   q = q.trim().toLowerCase()
@@ -190,6 +171,10 @@ document.addEventListener('keydown', (e) => {
   if (e.key === '/') {
     e.preventDefault()
     openSearch()
+  } else if (e.key === 'e' && !document.querySelector('.lc-edit')) {
+    // jump to the editor, on this problem if we're on its page
+    const slug = /^\/leetcode\/([a-z0-9-]+)\/?$/.exec(location.pathname)?.[1]
+    location.href = `/leetcode/edit/${slug ? `?slug=${slug}` : ''}`
   } else if (back && e.key === 'Escape') {
     location.href = back.href
   } else if (prev && (e.key === 'k' || e.key === 'ArrowLeft')) {

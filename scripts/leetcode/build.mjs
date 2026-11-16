@@ -129,7 +129,7 @@ function searchDialog() {
     </dialog>`
 }
 
-function page({ title, description, body, topics }) {
+function page({ title, description, body, topics, scripts = '' }) {
   return `<!doctype html>
 <html lang="en">
   <head>
@@ -159,7 +159,7 @@ ${body}
     </div>
     ${searchDialog()}
     <script type="application/json" id="lc-data">${searchData(topics)}</script>
-    <script type="module" src="/src/leetcode.js"></script>
+    <script type="module" src="/src/leetcode.js"></script>${scripts}
   </body>
 </html>
 `
@@ -327,6 +327,87 @@ ${render(s.body)}
   })
 }
 
+// ---------- /leetcode/edit ----------
+// The form posts to api/leetcode.js. Every problem ships in the page for the
+// picker; the file itself is fetched when one is picked, so it's always current.
+const COMPLEXITIES = ['O(1)', 'O(log n)', 'O(n)', 'O(n log n)', 'O(n + m)', 'O(n · m)', 'O(n²)', 'O(n³)', 'O(2ⁿ)', 'O(n · 2ⁿ)', 'O(n!)', 'O(h)', 'O(V + E)', 'O(E log V)', 'O(k)', 'O(n log k)']
+const LANGS = ['python', 'java', 'cpp', 'c', 'javascript', 'typescript', 'go', 'rust', 'csharp', 'kotlin', 'swift']
+
+function editPage(topics) {
+  const data = topics.flatMap((t) => t.problems.map((p) => [p.slug, p.title, t.label, p.difficulty, p.status, p.leetcode]))
+  const options = (list) => list.map((v) => `<option value="${esc(v)}"></option>`).join('')
+  const statusRadio = (value, hint) =>
+    `<label class="lc-chip"><input type="radio" name="status" value="${value}"${value === 'attempted' ? ' checked' : ''} />${checkbox(value)}<span>${value}</span><span class="visually-hidden">: ${hint}</span></label>`
+
+  const body = `        <section class="lc-edit">
+          <header class="lc-edit-head">
+            <h1>edit notes</h1>
+            <a class="lc-edit-back" href="/leetcode/">back to map</a>
+          </header>
+
+          <form class="lc-lock" autocomplete="on">
+            <input type="text" name="username" value="neetcode" autocomplete="username" hidden />
+            <label class="lc-label" for="lc-pw">password</label>
+            <div class="lc-lock-row">
+              <input class="lc-input" id="lc-pw" type="password" autocomplete="current-password" required />
+              <button class="lc-btn" type="submit">unlock</button>
+            </div>
+            <label class="lc-remember"><input type="checkbox" id="lc-remember" /> remember on this device</label>
+            <p class="lc-msg" role="status"></p>
+          </form>
+
+          <form class="lc-form" hidden novalidate>
+            <div class="lc-field lc-pick">
+              <label class="lc-label" for="lc-problem">problem</label>
+              <input class="lc-input" id="lc-problem" type="text" placeholder="start typing a title…" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="lc-pick-list" aria-autocomplete="list" />
+              <ul id="lc-pick-list" class="lc-results lc-pick-list" role="listbox" aria-label="problems" hidden></ul>
+              <p class="lc-picked" aria-live="polite"></p>
+            </div>
+
+            <fieldset class="lc-field lc-chips">
+              <legend class="lc-label">status</legend>
+              ${statusRadio('attempted', 'tried it, not done')}
+              ${statusRadio('solved', 'done')}
+              ${statusRadio('review', 'solved, but redo it later')}
+            </fieldset>
+
+            <div class="lc-edit-grid">
+              <div class="lc-field"><label class="lc-label" for="lc-date">date</label><input class="lc-input lc-mono" id="lc-date" name="date" type="date" /></div>
+              <div class="lc-field"><label class="lc-label" for="lc-time">time</label><input class="lc-input lc-mono" id="lc-time" name="time" list="lc-complexities" placeholder="O(n)" autocomplete="off" /></div>
+              <div class="lc-field"><label class="lc-label" for="lc-space">space</label><input class="lc-input lc-mono" id="lc-space" name="space" list="lc-complexities" placeholder="O(1)" autocomplete="off" /></div>
+              <div class="lc-field"><label class="lc-label" for="lc-lang">language</label><input class="lc-input lc-mono" id="lc-lang" name="lang" list="lc-langs" value="python" autocomplete="off" /></div>
+            </div>
+            <datalist id="lc-complexities">${options(COMPLEXITIES)}</datalist>
+            <datalist id="lc-langs">${options(LANGS)}</datalist>
+
+            <div class="lc-field"><label class="lc-label" for="lc-approach">approach</label><textarea class="lc-input" id="lc-approach" name="approach" rows="4" placeholder="the idea in a sentence or two. markdown works."></textarea></div>
+            <div class="lc-field"><label class="lc-label" for="lc-code">code <span class="lc-hint">tab indents · esc then tab to leave</span></label><textarea class="lc-input lc-mono lc-code" id="lc-code" name="code" rows="12" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea></div>
+            <div class="lc-field"><label class="lc-label" for="lc-notes">notes</label><textarea class="lc-input" id="lc-notes" name="notes" rows="4" placeholder="- gotchas, edge cases, other approaches"></textarea></div>
+            <details class="lc-field lc-extra" hidden>
+              <summary class="lc-label">other sections in this file</summary>
+              <textarea class="lc-input lc-mono" id="lc-extra" name="extra" rows="6" spellcheck="false"></textarea>
+            </details>
+
+            <div class="lc-actions">
+              <button class="lc-btn lc-save" type="submit" disabled>save</button>
+              <span class="lc-hint" aria-hidden="true"><kbd>ctrl</kbd> <kbd>s</kbd></span>
+              <p class="lc-msg" role="status"></p>
+              <button class="lc-link lc-logout" type="button">lock</button>
+            </div>
+          </form>
+        </section>`
+
+  return page({
+    title: 'edit · neetcode 150',
+    description: 'edit my neetcode 150 notes',
+    body,
+    topics,
+    scripts: `
+    <script type="application/json" id="lc-edit-data">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>
+    <script type="module" src="/src/leetcode-edit.js"></script>`,
+  })
+}
+
 // Validates, then writes every page. Returns the absolute paths of the html
 // files written. Throws ValidationError on bad data.
 export async function generate() {
@@ -346,6 +427,7 @@ export async function generate() {
   }
 
   write('index.html', indexPage(topics))
+  write('edit/index.html', editPage(topics))
   for (const t of topics) {
     for (const p of t.problems) {
       if (p.solution) write(`${p.slug}/index.html`, solutionPage(p, t, render, topics))
