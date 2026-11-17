@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="clarence cesante, computer science @ uoft" />
     <link rel="canonical" href="https://clarencecesante.me/" />
     <meta property="og:type" content="website" />
@@ -35,7 +35,8 @@
       }
     </script>
     <script>
-      // apply a saved theme before first paint so there's no flash
+      // apply a saved theme before first paint so there's no flash; .js turns on scroll reveals
+      document.documentElement.classList.add('js')
       try {
         const t = localStorage.getItem('theme')
         if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t
@@ -43,201 +44,254 @@
     </script>
   </head>
   <body>
-    <div class="wrap">
-      <nav class="topbar">
-        <a class="brand" href="#top">clarence cesante</a>
-        <div class="topbar-right">
-          <ul class="nav-links">
-            <li><a href="#projects">projects</a></li>
-            <li><a href="#about">about</a></li>
-            <li><a href="#photos">photos</a></li>
-          </ul>
-          <ul class="nav-icons">
-            <li><a class="nav-connect" href="#connect">connect<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16M5 13l7 7 7-7" /></svg></a></li>
+    <!-- one "goo" filter for every blob: blur the circles together, then snap the alpha
+         back to a hard edge so overlapping circles melt into a single shape -->
+    <svg class="defs" aria-hidden="true" focusable="false">
+      <!-- the leaf gradient a blob takes on when you point at it -->
+      <linearGradient id="leaf" gradientUnits="userSpaceOnUse" x1="10" y1="10" x2="90" y2="90">
+        <stop offset="0" stop-color="#d9f29a" />
+        <stop offset="0.45" stop-color="#8fd4ae" />
+        <stop offset="1" stop-color="#4f8a4c" />
+      </linearGradient>
+      <filter id="goo" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
+        <feColorMatrix in="blur" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 24 -10" />
+      </filter>
+    </svg>
+
+    <main>
+      <!-- ---------- home ---------- -->
+      <header class="hero" id="home">
+        <div class="hero-inner">
+          <h1 class="rise">clarence cesante</h1>
+          <p class="hero-sub rise" style="--delay: 80ms">cs student @ uoft &middot; backend + dev-ops</p>
+
+          <ul class="hero-blobs rise" style="--delay: 180ms">
             <li>
-              <button class="theme-toggle" type="button" aria-label="toggle light/dark mode">
-                <svg class="moon" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
-                </svg>
-                <svg class="sun" viewBox="0 0 24 24" aria-hidden="true">
-                  <circle cx="12" cy="12" r="4" />
-                  <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
-                </svg>
-              </button>
+              <a href="#about">
+                <svg class="blob blob-trio" viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#goo)"><circle cx="50" cy="34" r="14" style="--dx: 0; --dy: -6" /><circle cx="64" cy="60" r="14" style="--dx: 5; --dy: 4" /><circle cx="36" cy="60" r="14" style="--dx: -5; --dy: 4" /></g></svg>
+                <span>about</span>
+              </a>
+            </li>
+            <li>
+              <a href="#projects">
+                <svg class="blob blob-pair" viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#goo)"><circle cx="40" cy="40" r="17" /><circle cx="60" cy="60" r="17" /></g></svg>
+                <span>projects</span>
+              </a>
+            </li>
+            <li>
+              <a href="#photos">
+                <svg class="blob blob-orbit" viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#goo)"><circle cx="50" cy="50" r="20" /><g class="orbit"><circle cx="50" cy="22" r="9" /></g></g></svg>
+                <span>photos</span>
+              </a>
+            </li>
+            <li>
+              <a href="#connect">
+                <svg class="blob blob-kiss" viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#goo)"><circle cx="32" cy="50" r="15" /><circle cx="68" cy="50" r="15" /></g></svg>
+                <span>connect</span>
+              </a>
             </li>
           </ul>
+
+          <p class="hero-note rise" style="--delay: 280ms">toronto, canada &middot; class of 2031</p>
         </div>
-      </nav>
+      </header>
 
-      <main id="top">
-        <svg class="subway" aria-hidden="true"></svg>
-        <header class="hero">
-          <figure class="hero-figure rise">
-            <div class="hero-art">
-              <img src="/photos/king-street-west.webp" alt="" width="1600" height="1066" />
+      <!-- ---------- about ---------- -->
+      <section class="section" id="about">
+        <p class="statement reveal">
+          i'm a cs student at uoft
+          <span class="chip" style="--tilt: -4deg"><img src="/photos/king-street-west.webp" alt="" width="1600" height="1066" /></span>,
+          interested in <mark class="glow">backend systems and dev-ops pipelines</mark>.
+          i enjoy watching movies
+          <span class="chip" style="--tilt: 3deg" data-label="the departed (2006)" tabindex="0"><img src="/photos/the-departed.webp" alt="the departed (2006)" width="300" height="300" /></span>,
+          taking photos
+          <span class="chip" style="--tilt: -2deg"><img src="/photos/flowers.webp" alt="" width="600" height="750" /></span>,
+          and travelling to new cities
+          <span class="chip chip-flag" style="--tilt: 5deg"><img src="/flags/jp.svg" alt="" width="20" height="15" /></span>.
+        </p>
+
+        <a class="pill reveal" href="#connect">say hi <span aria-hidden="true">&rarr;</span></a>
+
+        <div class="places-wrap reveal">
+          <p class="eyebrow">places i've been</p>
+          <div class="places" role="group" aria-label="places i've been"><ul class="places-track"><li>hong kong<img class="flag" src="/flags/hk.svg" alt="" width="20" height="15" /></li><li>singapore<img class="flag" src="/flags/sg.svg" alt="" width="20" height="15" /></li><li>manila<img class="flag" src="/flags/ph.svg" alt="" width="20" height="15" /></li><li>tokyo<img class="flag" src="/flags/jp.svg" alt="" width="20" height="15" /></li><li>nyc<img class="flag" src="/flags/us.svg" alt="" width="20" height="15" /></li><li>chicago<img class="flag" src="/flags/us.svg" alt="" width="20" height="15" /></li><li>washington dc<img class="flag" src="/flags/us.svg" alt="" width="20" height="15" /></li><li>montreal<img class="flag" src="/flags/ca.svg" alt="" width="20" height="15" /></li></ul></div>
+        </div>
+
+        <div class="favourites reveal">
+          <div class="peek">
+            <img class="peek-cover" src="/photos/the-departed.webp" alt="still from the departed" width="300" height="300" loading="lazy" />
+            <div>
+              <p class="eyebrow">favourite movie</p>
+              <p class="peek-title">the departed</p>
+              <p class="peek-sub">2006</p>
             </div>
-          </figure>
-
-          <div class="hero-text rise" style="--delay: 120ms">
-            <h1>hello, i'm <span class="name">clarence</span></h1>
-            <p class="lede">
-              i'm a cs student @ university of toronto (expected class of 2031), interested in
-              <em>backend systems</em> and <em>dev-ops pipelines</em>.
-            </p>
           </div>
-        </header>
-
-        <section class="section rise" id="projects">
-          <div class="section-label"><a class="label-num station" href="#projects" aria-label="projects, stop 1"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19.25" /></svg>1</a><span class="label-name">projects</span></div>
-          <div class="section-main">
-            <h2>projects</h2>
-          </div>
-          <article class="section-wide project">
-            <div class="project-head">
-              <h3 class="side-title">live stock tracker (wip)</h3>
-              <p class="meta">spring boot · react · postgresql · websockets</p>
-            </div>
-            <div class="project-body">
-              <p>
-                a spring boot backend polls
-                finnhub every 15 seconds and broadcasts the latest prices to every
-                connected client over websockets (stomp), so the ui updates live
-                without refreshing. prices are saved to postgres, so the app loads
-                with the last known prices and the chart still shows recent history
-                after market close.
-              </p>
-              <div class="text-links">
-                <a href="https://github.com/actuallycedric/stock-tracker-frontend" target="_blank" rel="noreferrer">frontend</a>
-                <a href="https://github.com/actuallycedric/live-stock-tracker" target="_blank" rel="noreferrer">backend</a>
+          <!-- filled from /api/spotify by main.js; baby boy shows until then or if it fails -->
+          <div class="peek" id="last-played">
+            <div class="vinyl">
+              <div class="vinyl-disc">
+                <img class="vinyl-label" src="/photos/arizona-baby.jpg" alt="arizona baby album cover" width="240" height="240" loading="lazy" />
               </div>
             </div>
-          </article>
-          <figure class="section-wide project-shot">
-            <img src="/photos/tracker-holdings.webp" alt="live stock tracker holdings table beside a price chart for nvda" width="1600" height="750" loading="lazy" />
-          </figure>
-          <article class="section-wide project">
-            <div class="project-head">
-              <h3 class="side-title">bank api</h3>
-              <p class="meta">spring boot · postgresql · testcontainers</p>
+            <div>
+              <p class="eyebrow peek-label">listening to</p>
+              <p class="peek-title"><a href="https://open.spotify.com/search/baby%20boy%20kevin%20abstract" target="_blank" rel="noopener">baby boy</a></p>
+              <p class="peek-sub">kevin abstract</p>
             </div>
-            <div class="project-body">
-              <p>
-                a rest api rebuild of my earlier cli bank app. accounts support
-                deposits, withdrawals, and transfers, with paginated transaction
-                history. invalid requests return clear 400 / 404 / 409 errors, and
-                transfers run in a single transaction so a failure never leaves one
-                account debited without the other credited. integration tests run
-                against a real postgres instance in docker via testcontainers.
-              </p>
-              <div class="text-links">
-                <a href="https://github.com/actuallycedric/bank-account-reboot" target="_blank" rel="noreferrer">repo</a>
-              </div>
-            </div>
-          </article>
-          <div class="section-wide skills-block">
-            <h3 class="side-title">skills</h3>
-            <ul class="skills">
-              <li><svg aria-hidden="true"><use href="/icons.svg#html" /></svg>html &amp; css</li>
-              <li><svg aria-hidden="true"><use href="/icons.svg#javascript" /></svg>javascript</li>
-              <li><svg aria-hidden="true"><use href="/icons.svg#react" /></svg>react</li>
-              <li><svg aria-hidden="true"><use href="/icons.svg#postgres" /></svg>postgres</li>
-              <li><svg aria-hidden="true"><use href="/icons.svg#java" /></svg>java</li>
-              <li><svg aria-hidden="true"><use href="/icons.svg#spring-boot" /></svg>spring boot</li>
-              <li><svg aria-hidden="true"><use href="/icons.svg#junit" /></svg>junit</li>
-              <li><svg aria-hidden="true"><use href="/icons.svg#testcontainers" /></svg>testcontainers</li>
-              <li><svg aria-hidden="true"><use href="/icons.svg#python" /></svg>python</li>
-              <li><svg aria-hidden="true"><use href="/icons.svg#git" /></svg>git</li>
-            </ul>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section class="section rise" id="about">
-          <div class="section-label"><a class="label-num station" href="#about" aria-label="about, stop 2"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19.25" /></svg>2</a><span class="label-name">about</span></div>
-          <div class="section-main">
-            <h2>about me</h2>
-            <p>
-              in my free time, i enjoy watching <em>movies</em>, taking <em>photos</em>,
-              and <em>travelling</em> (especially urban areas).
-            </p>
-            <p class="places-label">some of the places i've gone:</p>
-            <div class="places" role="group" aria-label="places i've been"><ul class="places-track"><li>hong kong<img class="flag" src="/flags/hk.svg" alt="" width="20" height="15" /></li><li>singapore<img class="flag" src="/flags/sg.svg" alt="" width="20" height="15" /></li><li>manila<img class="flag" src="/flags/ph.svg" alt="" width="20" height="15" /></li><li>tokyo<img class="flag" src="/flags/jp.svg" alt="" width="20" height="15" /></li><li>nyc<img class="flag" src="/flags/us.svg" alt="" width="20" height="15" /></li><li>chicago<img class="flag" src="/flags/us.svg" alt="" width="20" height="15" /></li><li>washington dc<img class="flag" src="/flags/us.svg" alt="" width="20" height="15" /></li><li>montreal<img class="flag" src="/flags/ca.svg" alt="" width="20" height="15" /></li></ul></div>
-          </div>
-          <div class="section-side">
-            <div class="favourites">
-              <div class="peek">
-                <img class="peek-cover" src="/photos/the-departed.webp" alt="still from the departed" width="300" height="300" loading="lazy" />
-                <div>
-                  <p class="peek-label">favourite movie</p>
-                  <p class="peek-title">the departed</p>
-                  <p class="peek-sub">2006</p>
+      <!-- ---------- projects ---------- -->
+      <section class="section" id="projects">
+        <div class="section-head reveal">
+          <svg class="blob blob-pair blob-head" viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#goo)"><circle cx="40" cy="40" r="17" /><circle cx="60" cy="60" r="17" /></g></svg>
+          <h2>things i've built</h2>
+        </div>
+
+        <div class="rows reveal">
+          <details class="row" open>
+            <summary>
+              <span class="row-name">live stock tracker <em>wip</em></span>
+              <span class="row-meta">spring boot · react · postgres · websockets</span>
+              <span class="row-arrow" aria-hidden="true">&darr;</span>
+            </summary>
+            <div class="row-body">
+              <div class="row-text">
+                <p>
+                  a spring boot backend polls finnhub every 15 seconds and broadcasts the latest
+                  prices to every connected client over websockets (stomp), so the ui updates live
+                  without refreshing. prices are saved to postgres, so the app loads with the last
+                  known prices and the chart still shows recent history after market close.
+                </p>
+                <div class="links">
+                  <a href="https://github.com/actuallycedric/stock-tracker-frontend" target="_blank" rel="noreferrer">frontend <span aria-hidden="true">&nearr;</span></a>
+                  <a href="https://github.com/actuallycedric/live-stock-tracker" target="_blank" rel="noreferrer">backend <span aria-hidden="true">&nearr;</span></a>
                 </div>
               </div>
-              <!-- filled from /api/spotify by main.js; baby boy shows until then or if it fails -->
-              <div class="peek" id="last-played">
-                <div class="vinyl">
-                  <div class="vinyl-disc">
-                    <img class="vinyl-label" src="/photos/arizona-baby.jpg" alt="arizona baby album cover" width="240" height="240" loading="lazy" />
-                  </div>
-                </div>
-                <div>
-                  <p class="peek-label">listening to</p>
-                  <p class="peek-title"><a href="https://open.spotify.com/search/baby%20boy%20kevin%20abstract" target="_blank" rel="noopener">baby boy</a></p>
-                  <p class="peek-sub">kevin abstract</p>
+              <figure class="row-shot">
+                <img src="/photos/tracker-holdings.webp" alt="live stock tracker holdings table beside a price chart for nvda" width="1600" height="750" loading="lazy" />
+              </figure>
+            </div>
+          </details>
+
+          <details class="row">
+            <summary>
+              <span class="row-name">bank api</span>
+              <span class="row-meta">spring boot · postgres · testcontainers</span>
+              <span class="row-arrow" aria-hidden="true">&darr;</span>
+            </summary>
+            <div class="row-body">
+              <div class="row-text">
+                <p>
+                  a rest api rebuild of my earlier cli bank app. accounts support deposits,
+                  withdrawals, and transfers, with paginated transaction history. invalid requests
+                  return clear 400 / 404 / 409 errors, and transfers run in a single transaction so a
+                  failure never leaves one account debited without the other credited. integration
+                  tests run against a real postgres instance in docker via testcontainers.
+                </p>
+                <div class="links">
+                  <a href="https://github.com/actuallycedric/bank-account-reboot" target="_blank" rel="noreferrer">repo <span aria-hidden="true">&nearr;</span></a>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
+          </details>
+        </div>
 
-        <section class="section rise" id="photos">
-          <div class="section-label"><a class="label-num station" href="#photos" aria-label="photos, stop 3"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19.25" /></svg>3</a><span class="label-name">photos</span></div>
-          <div class="section-main">
-            <div class="heading-row">
-              <h2>photos</h2>
-              <p class="heading-note">shot on canon eos-m</p>
+        <div class="tools reveal">
+          <p class="eyebrow">my skills</p>
+          <ul class="skills">
+            <li><svg aria-hidden="true"><use href="/icons.svg#java" /></svg>java</li>
+            <li><svg aria-hidden="true"><use href="/icons.svg#spring-boot" /></svg>spring boot</li>
+            <li><svg aria-hidden="true"><use href="/icons.svg#postgres" /></svg>postgres</li>
+            <li><svg aria-hidden="true"><use href="/icons.svg#testcontainers" /></svg>testcontainers</li>
+            <li><svg aria-hidden="true"><use href="/icons.svg#junit" /></svg>junit</li>
+            <li><svg aria-hidden="true"><use href="/icons.svg#python" /></svg>python</li>
+            <li><svg aria-hidden="true"><use href="/icons.svg#javascript" /></svg>javascript</li>
+            <li><svg aria-hidden="true"><use href="/icons.svg#react" /></svg>react</li>
+            <li><svg aria-hidden="true"><use href="/icons.svg#html" /></svg>html &amp; css</li>
+            <li><svg aria-hidden="true"><use href="/icons.svg#git" /></svg>git</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ---------- photos ---------- -->
+      <section class="section" id="photos">
+        <div class="section-head reveal">
+          <svg class="blob blob-orbit blob-head" viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#goo)"><circle cx="50" cy="50" r="20" /><g class="orbit"><circle cx="50" cy="22" r="9" /></g></g></svg>
+          <h2>photos</h2>
+          <p class="sub">shot on my beloved canon eos-m</p>
+        </div>
+
+        <div class="gallery reveal">
+          <div class="carousel" tabindex="0" role="region" aria-label="photos, scroll sideways">
+            <div class="carousel-track">
+              <figure><img src="/photos/food.webp" alt="food with the bros" loading="lazy" draggable="false" /></figure>
+              <figure><img src="/photos/margaux.webp" alt="margaux" loading="lazy" draggable="false" /></figure>
+              <figure><img src="/photos/flowers.webp" alt="flowers" loading="lazy" draggable="false" /></figure>
+              <figure><img src="/photos/stay-on-the-path.webp" alt="stay on the path" loading="lazy" draggable="false" /></figure>
+              <figure><img src="/photos/tremblant.webp" alt="tremblant" loading="lazy" draggable="false" /></figure>
+              <figure><img src="/photos/gondola.webp" alt="gondola" loading="lazy" draggable="false" /></figure>
+              <figure><img src="/photos/lakeview.webp" alt="lakeview" loading="lazy" draggable="false" /></figure>
             </div>
           </div>
-          <div class="section-wide gallery">
-            <div class="carousel" tabindex="0" role="region" aria-label="photos, scroll sideways">
-              <div class="carousel-track">
-                <figure><img src="/photos/food.webp" alt="food with the bros" loading="lazy" draggable="false" /></figure>
-                <figure><img src="/photos/margaux.webp" alt="margaux" loading="lazy" draggable="false" /></figure>
-                <figure><img src="/photos/flowers.webp" alt="flowers" loading="lazy" draggable="false" /></figure>
-                <figure><img src="/photos/stay-on-the-path.webp" alt="stay on the path" loading="lazy" draggable="false" /></figure>
-                <figure><img src="/photos/tremblant.webp" alt="tremblant" loading="lazy" draggable="false" /></figure>
-                <figure><img src="/photos/gondola.webp" alt="gondola" loading="lazy" draggable="false" /></figure>
-                <figure><img src="/photos/lakeview.webp" alt="lakeview" loading="lazy" draggable="false" /></figure>
-              </div>
-            </div>
-            <div class="carousel-controls">
-              <div class="carousel-progress" aria-hidden="true"><span></span></div>
-              <button class="carousel-btn" type="button" data-dir="-1" aria-label="previous photos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H4M11 5l-7 7 7 7" /></svg></button>
-              <button class="carousel-btn" type="button" data-dir="1" aria-label="next photos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M13 5l7 7-7 7" /></svg></button>
-            </div>
+          <div class="carousel-controls">
+            <div class="carousel-progress" aria-hidden="true"><span></span></div>
+            <button class="carousel-btn" type="button" data-dir="-1" aria-label="previous photos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H4M11 5l-7 7 7 7" /></svg></button>
+            <button class="carousel-btn" type="button" data-dir="1" aria-label="next photos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M13 5l7 7-7 7" /></svg></button>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section class="section rise" id="connect">
-          <div class="section-label"><a class="label-num station" href="#connect" aria-label="connect, stop 4"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19.25" /></svg>4</a><span class="label-name">connect</span></div>
-          <div class="section-main">
-            <h2>connect</h2>
-          </div>
-          <div class="section-side">
-            <ul class="connections">
-              <li><a href="https://github.com/actuallycedric" target="_blank" rel="noreferrer"><svg aria-hidden="true"><use href="/icons.svg#github" /></svg>github<span aria-hidden="true">↗</span></a></li>
-              <li><a href="https://www.linkedin.com/in/clarencecesante/" target="_blank" rel="noreferrer"><svg aria-hidden="true"><use href="/icons.svg#linkedin" /></svg>linkedin<span aria-hidden="true">↗</span></a></li>
-              <li><a href="https://boxd.it/fe8yJ" target="_blank" rel="noreferrer"><svg aria-hidden="true"><use href="/icons.svg#letterboxd" /></svg>letterboxd<span aria-hidden="true">↗</span></a></li>
-              <li><a href="https://open.spotify.com/user/t8k7y016c4ekf2b1wway8sirm" target="_blank" rel="noreferrer"><svg aria-hidden="true"><use href="/icons.svg#spotify" /></svg>spotify<span aria-hidden="true">↗</span></a></li>
-              <li><button class="copy-email" type="button" data-email="clarenceccesante@gmail.com" aria-label="copy email address clarenceccesante@gmail.com"><svg viewBox="0 0 24 24" aria-hidden="true" class="stroke-icon"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>email<span class="email-address">clarenceccesante@gmail.com</span><span class="copy-hint" aria-live="polite">copy</span></button></li>
-            </ul>
-          </div>
-        </section>
-      </main>
+      <!-- ---------- connect ---------- -->
+      <section class="section" id="connect">
+        <div class="section-head reveal">
+          <svg class="blob blob-kiss blob-head" viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#goo)"><circle cx="32" cy="50" r="15" /><circle cx="68" cy="50" r="15" /></g></svg>
+          <h2>connect</h2>
+        </div>
 
-      <footer class="footer">
-        <p>ecclesiastes 9:11</p>
-      </footer>
-    </div>
+        <ul class="connections reveal">
+          <li><a href="https://github.com/actuallycedric" target="_blank" rel="noreferrer"><svg aria-hidden="true"><use href="/icons.svg#github" /></svg>github<span class="handle">actuallycedric</span><span class="go" aria-hidden="true">&nearr;</span></a></li>
+          <li><a href="https://www.linkedin.com/in/clarencecesante/" target="_blank" rel="noreferrer"><svg aria-hidden="true"><use href="/icons.svg#linkedin" /></svg>linkedin<span class="handle">clarencecesante</span><span class="go" aria-hidden="true">&nearr;</span></a></li>
+          <li><a href="https://boxd.it/fe8yJ" target="_blank" rel="noreferrer"><svg aria-hidden="true"><use href="/icons.svg#letterboxd" /></svg>letterboxd<span class="handle">films i've logged</span><span class="go" aria-hidden="true">&nearr;</span></a></li>
+          <li><a href="https://open.spotify.com/user/t8k7y016c4ekf2b1wway8sirm" target="_blank" rel="noreferrer"><svg aria-hidden="true"><use href="/icons.svg#spotify" /></svg>spotify<span class="handle">what's on repeat</span><span class="go" aria-hidden="true">&nearr;</span></a></li>
+          <li><button class="copy-email" type="button" data-email="clarenceccesante@gmail.com" aria-label="copy email address clarenceccesante@gmail.com"><svg viewBox="0 0 24 24" aria-hidden="true" class="stroke-icon"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>email<span class="handle email-address">clarenceccesante@gmail.com</span><span class="go copy-hint" aria-live="polite">copy</span></button></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>ecclesiastes 9:11</p>
+    </footer>
+
+    <!-- ---------- dock ---------- -->
+    <nav class="dock" aria-label="sections">
+      <a href="#home" data-section="home">
+        <svg class="blob blob-quad" viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#goo)"><circle cx="34" cy="34" r="11" /><circle cx="66" cy="34" r="11" /><circle cx="34" cy="66" r="11" /><circle cx="66" cy="66" r="11" /></g></svg>
+        <span>home</span>
+      </a>
+      <a href="#about" data-section="about">
+        <svg class="blob blob-trio" viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#goo)"><circle cx="50" cy="34" r="14" style="--dx: 0; --dy: -6" /><circle cx="64" cy="60" r="14" style="--dx: 5; --dy: 4" /><circle cx="36" cy="60" r="14" style="--dx: -5; --dy: 4" /></g></svg>
+        <span>about</span>
+      </a>
+      <a href="#projects" data-section="projects">
+        <svg class="blob blob-pair" viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#goo)"><circle cx="40" cy="40" r="17" /><circle cx="60" cy="60" r="17" /></g></svg>
+        <span>projects</span>
+      </a>
+      <a href="#photos" data-section="photos">
+        <svg class="blob blob-orbit" viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#goo)"><circle cx="50" cy="50" r="20" /><g class="orbit"><circle cx="50" cy="22" r="9" /></g></g></svg>
+        <span>photos</span>
+      </a>
+      <a href="#connect" data-section="connect">
+        <svg class="blob blob-kiss" viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#goo)"><circle cx="32" cy="50" r="15" /><circle cx="68" cy="50" r="15" /></g></svg>
+        <span>connect</span>
+      </a>
+      <button class="theme-toggle" type="button" aria-label="toggle light/dark mode">
+        <svg class="theme-icon" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="24" class="ring" /><path d="M50 26a24 24 0 0 1 0 48z" class="half" /></svg>
+        <span class="theme-label"><span class="to-dark">dark</span><span class="to-light">light</span></span>
+      </button>
+    </nav>
 
     <script type="module" src="/src/main.js"></script>
   </body>

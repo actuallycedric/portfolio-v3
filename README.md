@@ -1,12 +1,12 @@
-# portfolio v3
+# portfolio v4 (prototype)
 
-reworked portfolio with static js - plain html, css and a few lines of javascript. vite is only used as the dev server and bundler.
+white-field redesign: helvetica neue / inter tight, black "goo" blob shapes, a bottom dock, and one accent, an animated sage-to-moss leaf mesh gradient. still plain html, css and a few lines of javascript; vite is only the dev server and bundler.
 
 ## layout
 
 - `index.html` - all page content
-- `src/style.css` - styles (geist font, light/dark tokens)
-- `src/main.js` - runs the light/dark toggle
+- `src/style.css` - styles (light/dark tokens, leaf mesh, blob animations)
+- `src/main.js` - email copy, spotify card, marquee, carousel, scroll reveals, dock highlighting
 - `public/icons.svg` - skill icon sprite (from simple-icons, cc0)
 - `public/photos/` - favourite movie artwork
 - `src/theme.js` - light/dark toggle, shared by every page

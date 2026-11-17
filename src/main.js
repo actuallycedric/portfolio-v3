@@ -162,113 +162,50 @@ document.querySelectorAll('.gallery').forEach((gallery) => {
   update()
 })
 
-// Subway line: connect the numbered section circles marked .station with a
-// track, and fill it in as you scroll. A marker sits 60% of the way down the
-// viewport; every bit of track above it is lit and every stop it has passed
-// fills in, so scrolling back up empties the line again. Hitting the bottom of
-// the page completes the route.
-const subway = document.querySelector('.subway')
-const stations = [...document.querySelectorAll('.station')]
+// Scroll reveals: fade each .reveal block in the first time it comes into view.
+const revealer = new IntersectionObserver(
+  (entries) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue
+      entry.target.classList.add('in')
+      revealer.unobserve(entry.target)
+    }
+  },
+  { rootMargin: '0px 0px -10% 0px' },
+)
+document.querySelectorAll('.reveal').forEach((el) => revealer.observe(el))
 
-if (subway && stations.length > 1) {
-  const NS = 'http://www.w3.org/2000/svg'
-  const MARKER = 0.6 // fraction of the viewport height
-  const main = subway.parentElement
-  let stops = [] // circle centres (y, relative to <main>)
-  const sections = stations.map((s) => s.closest('.section'))
-  // opt in to section-gated carousels only once this script is running, so
-  // they still scroll if the js never loads
-  main.classList.add('sections-tracked')
+// Dock: light up the tile for the section crossing the middle of the screen.
+const tiles = new Map([...document.querySelectorAll('.dock [data-section]')].map((a) => [a.dataset.section, a]))
 
-  const segments = stations.slice(1).map(() => {
-    const track = document.createElementNS(NS, 'line')
-    const lit = document.createElementNS(NS, 'line')
-    track.classList.add('track')
-    lit.classList.add('lit')
-    subway.append(track, lit)
-    return { track, lit, y1: 0, length: 0 }
+function setActive(id) {
+  tiles.forEach((tile, key) => {
+    const on = key === id
+    tile.classList.toggle('active', on)
+    if (on) tile.setAttribute('aria-current', 'true')
+    else tile.removeAttribute('aria-current')
   })
-
-  // offsets relative to <main>, ignoring transforms (the sections' entrance
-  // animation moves them, which would throw off getBoundingClientRect)
-  function offsetIn(el) {
-    let x = 0
-    let y = 0
-    for (let node = el; node && node !== main; node = node.offsetParent) {
-      x += node.offsetLeft
-      y += node.offsetTop
-    }
-    return { x, y }
-  }
-
-  function layout() {
-    stops = stations.map((s) => offsetIn(s).y + s.offsetHeight / 2)
-    segments.forEach((seg, i) => {
-      const a = stations[i]
-      const b = stations[i + 1]
-      const pa = offsetIn(a)
-      const x = pa.x + a.offsetWidth / 2
-      seg.y1 = pa.y + a.offsetHeight
-      const y2 = offsetIn(b).y
-      seg.length = Math.max(0, y2 - seg.y1)
-      for (const line of [seg.track, seg.lit]) {
-        line.setAttribute('x1', x)
-        line.setAttribute('x2', x)
-        line.setAttribute('y1', seg.y1)
-        line.setAttribute('y2', y2)
-      }
-      seg.lit.style.strokeDasharray = seg.length
-    })
-    update()
-  }
-
-  function update() {
-    const mainTop = main.getBoundingClientRect().top
-    let marker = innerHeight * MARKER - mainTop
-    // the last stop is near the page bottom; on tall screens the marker would
-    // run out of page before reaching it. if so, speed the marker up over the
-    // final stretch of scrolling so it lands on the last stop exactly at the
-    // bottom of the page.
-    const maxScroll = document.documentElement.scrollHeight - innerHeight
-    const markerAtBottom = innerHeight * MARKER - (mainTop + scrollY) + maxScroll
-    const shortfall = stops[stops.length - 1] - markerAtBottom
-    if (shortfall > 0) {
-      const stretch = innerHeight * 0.5
-      const progress = Math.min(Math.max(1 - (maxScroll - scrollY) / stretch, 0), 1)
-      marker += shortfall * progress
-    }
-    segments.forEach((seg) => {
-      const filled = Math.min(Math.max(marker - seg.y1, 0), seg.length)
-      seg.lit.style.strokeDashoffset = seg.length - filled
-    })
-    // the section you're "on" is the last stop the marker has reached; its
-    // carousels run, every other section's are paused (see .current in css)
-    let current = -1
-    stations.forEach((station, i) => {
-      const reached = marker >= stops[i]
-      station.classList.toggle('lit', reached)
-      if (reached) current = i
-    })
-    sections.forEach((section, i) => {
-      section?.classList.toggle('current', i === current)
-    })
-  }
-
-  let queued = false
-  addEventListener(
-    'scroll',
-    () => {
-      if (queued) return
-      queued = true
-      requestAnimationFrame(() => {
-        queued = false
-        update()
-      })
-    },
-    { passive: true },
-  )
-
-  layout()
-  new ResizeObserver(layout).observe(main)
-  document.fonts?.ready.then(layout)
 }
+
+const spy = new IntersectionObserver(
+  (entries) => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) setActive(entry.target.id)
+    }
+  },
+  { rootMargin: '-45% 0px -50% 0px' },
+)
+tiles.forEach((_, id) => {
+  const section = document.getElementById(id)
+  if (section) spy.observe(section)
+})
+setActive('home')
+
+// the last section is short, so it may never reach the middle: claim it at the bottom
+addEventListener(
+  'scroll',
+  () => {
+    if (innerHeight + scrollY >= document.documentElement.scrollHeight - 2) setActive('connect')
+  },
+  { passive: true },
+)
