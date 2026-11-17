@@ -1,5 +1,0 @@
-{
-  "functions": {
-    "api/leetcode.js": { "includeFiles": "data/**" }
-  }
-}

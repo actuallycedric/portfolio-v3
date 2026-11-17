@@ -1,5 +1,5 @@
 // Light/dark toggle: flips whatever is showing now (saved choice or system
-// default) and remembers the choice. Shared by the home page and /leetcode.
+// default) and remembers the choice.
 const root = document.documentElement
 const systemDark = matchMedia('(prefers-color-scheme: dark)')
 
