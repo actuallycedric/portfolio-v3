@@ -174,38 +174,3 @@ const revealer = new IntersectionObserver(
   { rootMargin: '0px 0px -10% 0px' },
 )
 document.querySelectorAll('.reveal').forEach((el) => revealer.observe(el))
-
-// Dock: light up the tile for the section crossing the middle of the screen.
-const tiles = new Map([...document.querySelectorAll('.dock [data-section]')].map((a) => [a.dataset.section, a]))
-
-function setActive(id) {
-  tiles.forEach((tile, key) => {
-    const on = key === id
-    tile.classList.toggle('active', on)
-    if (on) tile.setAttribute('aria-current', 'true')
-    else tile.removeAttribute('aria-current')
-  })
-}
-
-const spy = new IntersectionObserver(
-  (entries) => {
-    for (const entry of entries) {
-      if (entry.isIntersecting) setActive(entry.target.id)
-    }
-  },
-  { rootMargin: '-45% 0px -50% 0px' },
-)
-tiles.forEach((_, id) => {
-  const section = document.getElementById(id)
-  if (section) spy.observe(section)
-})
-setActive('home')
-
-// the last section is short, so it may never reach the middle: claim it at the bottom
-addEventListener(
-  'scroll',
-  () => {
-    if (innerHeight + scrollY >= document.documentElement.scrollHeight - 2) setActive('connect')
-  },
-  { passive: true },
-)

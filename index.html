@@ -44,19 +44,13 @@
     </script>
   </head>
   <body>
-    <!-- one "goo" filter for every blob: blur the circles together, then snap the alpha
-         back to a hard edge so overlapping circles melt into a single shape -->
+    <!-- shared gradient for the shapes: a shape takes on the leaf gradient when you point at it -->
     <svg class="defs" aria-hidden="true" focusable="false">
-      <!-- the leaf gradient a blob takes on when you point at it -->
       <linearGradient id="leaf" gradientUnits="userSpaceOnUse" x1="10" y1="10" x2="90" y2="90">
         <stop offset="0" stop-color="#d9f29a" />
         <stop offset="0.45" stop-color="#8fd4ae" />
         <stop offset="1" stop-color="#4f8a4c" />
       </linearGradient>
-      <filter id="goo" x="-50%" y="-50%" width="200%" height="200%">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
-        <feColorMatrix in="blur" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 24 -10" />
-      </filter>
     </svg>
 
     <main>
@@ -69,25 +63,25 @@
           <ul class="hero-blobs rise" style="--delay: 180ms">
             <li>
               <a href="#about">
-                <svg class="blob blob-trio" viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#goo)"><circle cx="50" cy="34" r="14" style="--dx: 0; --dy: -6" /><circle cx="64" cy="60" r="14" style="--dx: 5; --dy: 4" /><circle cx="36" cy="60" r="14" style="--dx: -5; --dy: 4" /></g></svg>
+                <svg class="blob shape-leaf" viewBox="0 0 100 100" aria-hidden="true"><g class="leaf-sway"><path d="M50 8C78 18 88 46 76 70 68 85 52 92 50 92 48 92 32 85 24 70 12 46 22 18 50 8Z" /><path d="M50 34V88" /></g></svg>
                 <span>about</span>
               </a>
             </li>
             <li>
               <a href="#projects">
-                <svg class="blob blob-pair" viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#goo)"><circle cx="40" cy="40" r="17" /><circle cx="60" cy="60" r="17" /></g></svg>
+                <svg class="blob shape-bloom" viewBox="0 0 100 100" aria-hidden="true"><g class="bloom-spin"><ellipse cx="50" cy="29" rx="11" ry="21" /><ellipse cx="50" cy="29" rx="11" ry="21" transform="rotate(60)" /><ellipse cx="50" cy="29" rx="11" ry="21" transform="rotate(120)" /><ellipse cx="50" cy="29" rx="11" ry="21" transform="rotate(180)" /><ellipse cx="50" cy="29" rx="11" ry="21" transform="rotate(240)" /><ellipse cx="50" cy="29" rx="11" ry="21" transform="rotate(300)" /></g></svg>
                 <span>projects</span>
               </a>
             </li>
             <li>
               <a href="#photos">
-                <svg class="blob blob-orbit" viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#goo)"><circle cx="50" cy="50" r="20" /><g class="orbit"><circle cx="50" cy="22" r="9" /></g></g></svg>
+                <svg class="blob shape-lens" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="40" /><circle cx="50" cy="50" r="22" /><g class="lens-dot"><circle cx="50" cy="36" r="4.5" /></g></svg>
                 <span>photos</span>
               </a>
             </li>
             <li>
               <a href="#connect">
-                <svg class="blob blob-kiss" viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#goo)"><circle cx="32" cy="50" r="15" /><circle cx="68" cy="50" r="15" /></g></svg>
+                <svg class="blob shape-links" viewBox="0 0 100 100" aria-hidden="true"><circle class="link-a" cx="36" cy="50" r="26" /><circle class="link-b" cx="64" cy="50" r="26" /></svg>
                 <span>connect</span>
               </a>
             </li>
@@ -101,7 +95,7 @@
       <section class="section" id="about">
         <p class="statement reveal">
           i'm a cs student at uoft
-          <span class="chip" style="--tilt: -4deg"><img src="/photos/king-street-west.webp" alt="" width="1600" height="1066" /></span>,
+          <span class="chip" style="--tilt: -4deg"><img src="/photos/utsc-architecture.webp" alt="" width="1600" height="1200" /></span>,
           interested in <mark class="glow">backend systems and dev-ops pipelines</mark>.
           i enjoy watching movies
           <span class="chip" style="--tilt: 3deg" data-label="the departed (2006)" tabindex="0"><img src="/photos/the-departed.webp" alt="the departed (2006)" width="300" height="300" /></span>,
@@ -146,7 +140,7 @@
       <!-- ---------- projects ---------- -->
       <section class="section" id="projects">
         <div class="section-head reveal">
-          <svg class="blob blob-pair blob-head" viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#goo)"><circle cx="40" cy="40" r="17" /><circle cx="60" cy="60" r="17" /></g></svg>
+          <svg class="blob shape-bloom blob-head" viewBox="0 0 100 100" aria-hidden="true"><g class="bloom-spin"><ellipse cx="50" cy="29" rx="11" ry="21" /><ellipse cx="50" cy="29" rx="11" ry="21" transform="rotate(60)" /><ellipse cx="50" cy="29" rx="11" ry="21" transform="rotate(120)" /><ellipse cx="50" cy="29" rx="11" ry="21" transform="rotate(180)" /><ellipse cx="50" cy="29" rx="11" ry="21" transform="rotate(240)" /><ellipse cx="50" cy="29" rx="11" ry="21" transform="rotate(300)" /></g></svg>
           <h2>things i've built</h2>
         </div>
 
@@ -219,7 +213,7 @@
       <!-- ---------- photos ---------- -->
       <section class="section" id="photos">
         <div class="section-head reveal">
-          <svg class="blob blob-orbit blob-head" viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#goo)"><circle cx="50" cy="50" r="20" /><g class="orbit"><circle cx="50" cy="22" r="9" /></g></g></svg>
+          <svg class="blob shape-lens blob-head" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="40" /><circle cx="50" cy="50" r="22" /><g class="lens-dot"><circle cx="50" cy="36" r="4.5" /></g></svg>
           <h2>photos</h2>
           <p class="sub">shot on my beloved canon eos-m</p>
         </div>
@@ -247,7 +241,7 @@
       <!-- ---------- connect ---------- -->
       <section class="section" id="connect">
         <div class="section-head reveal">
-          <svg class="blob blob-kiss blob-head" viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#goo)"><circle cx="32" cy="50" r="15" /><circle cx="68" cy="50" r="15" /></g></svg>
+          <svg class="blob shape-links blob-head" viewBox="0 0 100 100" aria-hidden="true"><circle class="link-a" cx="36" cy="50" r="26" /><circle class="link-b" cx="64" cy="50" r="26" /></svg>
           <h2>connect</h2>
         </div>
 
@@ -261,37 +255,8 @@
       </section>
     </main>
 
-    <footer class="footer">
-      <p>ecclesiastes 9:11</p>
-    </footer>
+    <footer class="footer"></footer>
 
-    <!-- ---------- dock ---------- -->
-    <nav class="dock" aria-label="sections">
-      <a href="#home" data-section="home">
-        <svg class="blob blob-quad" viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#goo)"><circle cx="34" cy="34" r="11" /><circle cx="66" cy="34" r="11" /><circle cx="34" cy="66" r="11" /><circle cx="66" cy="66" r="11" /></g></svg>
-        <span>home</span>
-      </a>
-      <a href="#about" data-section="about">
-        <svg class="blob blob-trio" viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#goo)"><circle cx="50" cy="34" r="14" style="--dx: 0; --dy: -6" /><circle cx="64" cy="60" r="14" style="--dx: 5; --dy: 4" /><circle cx="36" cy="60" r="14" style="--dx: -5; --dy: 4" /></g></svg>
-        <span>about</span>
-      </a>
-      <a href="#projects" data-section="projects">
-        <svg class="blob blob-pair" viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#goo)"><circle cx="40" cy="40" r="17" /><circle cx="60" cy="60" r="17" /></g></svg>
-        <span>projects</span>
-      </a>
-      <a href="#photos" data-section="photos">
-        <svg class="blob blob-orbit" viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#goo)"><circle cx="50" cy="50" r="20" /><g class="orbit"><circle cx="50" cy="22" r="9" /></g></g></svg>
-        <span>photos</span>
-      </a>
-      <a href="#connect" data-section="connect">
-        <svg class="blob blob-kiss" viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#goo)"><circle cx="32" cy="50" r="15" /><circle cx="68" cy="50" r="15" /></g></svg>
-        <span>connect</span>
-      </a>
-      <button class="theme-toggle" type="button" aria-label="toggle light/dark mode">
-        <svg class="theme-icon" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="24" class="ring" /><path d="M50 26a24 24 0 0 1 0 48z" class="half" /></svg>
-        <span class="theme-label"><span class="to-dark">dark</span><span class="to-light">light</span></span>
-      </button>
-    </nav>
 
     <script type="module" src="/src/main.js"></script>
   </body>

@@ -26,7 +26,6 @@
   --sans: "Helvetica Neue", "Inter Tight Variable", Helvetica, Arial, sans-serif;
   --mono: "Geist Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
-  --dock: 5.25rem;
 
   interpolate-size: allow-keywords;
   color-scheme: light dark;
@@ -38,12 +37,6 @@
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-}
-
-@media (max-width: 640px) {
-  :root {
-    --dock: 4.25rem;
-  }
 }
 
 /* ---------- leaf mesh ----------
@@ -59,7 +52,6 @@
 @property --m4y { syntax: "<percentage>"; inherits: false; initial-value: 88%; }
 
 .mesh,
-.dock .active,
 .pill:hover,
 .pill:focus-visible,
 .skills li:hover,
@@ -121,7 +113,6 @@ html {
 
 body {
   min-height: 100svh;
-  padding-bottom: calc(var(--dock) + env(safe-area-inset-bottom));
   background: var(--bg);
   line-height: 1.55;
   overflow-x: hidden;
@@ -172,78 +163,63 @@ button {
   color: var(--faint);
 }
 
-/* ---------- blobs ----------
-   plain circles, melted together by the #goo filter. each family has its
-   own slow motion; in the dock they only move on the active or hovered tile. */
+/* ---------- shapes ----------
+   four hairline svgs (leaf, bloom, lens, links), one per section. strokes stay
+   a constant 1.25px at every size; each shape moves on its own slow sine loop. */
 .blob {
   display: block;
   overflow: visible;
-  fill: currentColor;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.25px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.blob g,
-.blob circle {
+.blob * {
+  vector-effect: non-scaling-stroke;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* petals rotate about the shape's centre, not their own */
+.shape-bloom ellipse {
+  transform-box: view-box;
   transform-origin: 50px 50px;
 }
 
-.blob-pair circle:first-child {
-  animation: pair-a 4.5s ease-in-out infinite alternate;
+.leaf-sway {
+  transform-origin: 50% 92%;
+  animation: sway 7s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
 }
-.blob-pair circle:last-child {
-  animation: pair-b 4.5s ease-in-out infinite alternate;
-}
-@keyframes pair-a {
-  from { transform: translate(5px, 5px); }
-  to { transform: translate(-8px, -8px); }
-}
-@keyframes pair-b {
-  from { transform: translate(-5px, -5px); }
-  to { transform: translate(8px, 8px); }
+@keyframes sway {
+  from { transform: rotate(-6deg); }
+  to { transform: rotate(6deg); }
 }
 
-.blob-trio > g {
-  animation: spin 16s linear infinite;
-}
-.blob-trio circle {
-  animation: drift 3.2s ease-in-out infinite alternate;
-}
-@keyframes drift {
-  from { transform: translate(calc(var(--dx) * -0.6px), calc(var(--dy) * -0.6px)); }
-  to { transform: translate(calc(var(--dx) * 1px), calc(var(--dy) * 1px)); }
+.bloom-spin {
+  transform-box: view-box;
+  transform-origin: 50px 50px;
+  animation: spin 48s linear infinite;
 }
 
-.blob-orbit .orbit {
-  animation: spin 6s linear infinite;
-}
-.blob-orbit > g > circle {
-  animation: breathe 3s ease-in-out infinite alternate;
-}
-@keyframes breathe {
-  to { transform: scale(0.88); }
+.lens-dot {
+  transform-box: view-box;
+  transform-origin: 50px 50px;
+  animation: spin 14s linear infinite;
 }
 
-.blob-kiss circle:first-child {
-  animation: kiss-a 3.6s cubic-bezier(0.6, 0, 0.3, 1) infinite alternate;
+.link-a {
+  animation: link-a 6s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
 }
-.blob-kiss circle:last-child {
-  animation: kiss-b 3.6s cubic-bezier(0.6, 0, 0.3, 1) infinite alternate;
+.link-b {
+  animation: link-b 6s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
 }
-@keyframes kiss-a {
-  to { transform: translateX(10px); }
+@keyframes link-a {
+  to { transform: translateX(9px); }
 }
-@keyframes kiss-b {
-  to { transform: translateX(-10px); }
-}
-
-.blob-quad circle {
-  animation: gather 3s ease-in-out infinite alternate;
-}
-.blob-quad circle:nth-child(1) { --dx: 1; --dy: 1; }
-.blob-quad circle:nth-child(2) { --dx: -1; --dy: 1; }
-.blob-quad circle:nth-child(3) { --dx: 1; --dy: -1; }
-.blob-quad circle:nth-child(4) { --dx: -1; --dy: -1; }
-@keyframes gather {
-  to { transform: translate(calc(var(--dx) * 9px), calc(var(--dy) * 9px)); }
+@keyframes link-b {
+  to { transform: translateX(-9px); }
 }
 
 @keyframes spin {
@@ -254,7 +230,7 @@ button {
 .hero {
   display: grid;
   place-items: center;
-  min-height: calc(100svh - var(--dock));
+  min-height: 100svh;
   padding: 4rem max(1rem, 4vw);
   text-align: center;
 }
@@ -271,7 +247,26 @@ h1 {
   font-weight: 400;
   line-height: 0.95;
   letter-spacing: -0.045em;
-  color: var(--ink);
+  /* the name wears the leaf gradient; stops are nudged toward --ink so the
+     pale lime still reads on white (and on the dark background) */
+  background: linear-gradient(
+      100deg,
+      color-mix(in srgb, var(--moss), var(--ink) 10%),
+      color-mix(in srgb, var(--mint), var(--ink) 35%) 30%,
+      color-mix(in srgb, var(--leaf), var(--ink) 40%) 55%,
+      color-mix(in srgb, var(--mint), var(--ink) 35%) 80%,
+      color-mix(in srgb, var(--moss), var(--ink) 10%)
+    )
+    0 0 / 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: name-flow 14s ease-in-out infinite alternate;
+}
+
+@keyframes name-flow {
+  to { background-position: 100% 0; }
 }
 
 .hero-sub {
@@ -308,7 +303,7 @@ h1 {
 
 .hero-blobs a:hover .blob,
 .hero-blobs a:focus-visible .blob {
-  fill: url(#leaf);
+  stroke: url(#leaf);
   transform: scale(1.12);
 }
 
@@ -782,6 +777,8 @@ h2 {
   width: 100%;
   border: 1px solid var(--rule);
   border-radius: 0.75rem;
+  /* sage tint from portfolio-v3, filters only so nothing bleeds at the rounded edges */
+  filter: grayscale(1) sepia(0.45) hue-rotate(35deg) saturate(0.9) contrast(1.05);
 }
 
 /* ---------- tools ---------- */
@@ -1016,69 +1013,6 @@ h2 {
   font-size: 0.8125rem;
   text-align: center;
   color: var(--faint);
-}
-
-/* ---------- dock ---------- */
-.dock {
-  position: fixed;
-  inset: auto 0 0;
-  z-index: 10;
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  padding-bottom: env(safe-area-inset-bottom);
-  border-top: 1px solid var(--rule);
-  background: color-mix(in srgb, var(--bg) 86%, transparent);
-  -webkit-backdrop-filter: blur(16px) saturate(1.4);
-  backdrop-filter: blur(16px) saturate(1.4);
-}
-
-.dock > a,
-.dock > button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  height: var(--dock);
-  border: 0;
-  border-left: 1px solid var(--rule);
-  background: none;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--ink);
-  cursor: pointer;
-  transition: background-color 0.25s;
-}
-
-.dock > :first-child {
-  border-left: 0;
-}
-
-.dock > :not(.active):hover {
-  background-color: var(--card);
-}
-
-.dock svg {
-  width: 2.4rem;
-  height: 2.4rem;
-  margin-block: -0.2rem;
-}
-
-/* dock blobs hold still until their tile is active or hovered */
-.dock > :not(.active):not(:hover) .blob * {
-  animation-play-state: paused;
-}
-
-@media (max-width: 640px) {
-  .dock > a,
-  .dock > button {
-    gap: 0.3rem;
-    font-size: 0.625rem;
-  }
-  .dock svg {
-    width: 1.9rem;
-    height: 1.9rem;
-  }
 }
 
 /* theme tile: a half-filled circle that flips over in dark mode */
