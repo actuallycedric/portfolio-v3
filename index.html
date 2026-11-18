@@ -105,7 +105,7 @@
           <span class="chip chip-flag" style="--tilt: 5deg"><img src="/flags/jp.svg" alt="" width="20" height="15" /></span>.
         </p>
 
-        <a class="pill reveal" href="#connect">say hi <span aria-hidden="true">&rarr;</span></a>
+        <a class="pill reveal" href="#connect">say hi <svg class="arrow" aria-hidden="true"><use href="/icons.svg#arrow-right" /></svg></a>
 
         <div class="places-wrap reveal">
           <p class="eyebrow">places i've been</p>
@@ -145,11 +145,11 @@
         </div>
 
         <div class="rows reveal">
-          <details class="row" open>
+          <details class="row" id="tracker" data-skills="java spring-boot postgres react javascript git" open>
             <summary>
               <span class="row-name">live stock tracker <em>wip</em></span>
               <span class="row-meta">spring boot · react · postgres · websockets</span>
-              <span class="row-arrow" aria-hidden="true">&darr;</span>
+              <span class="row-arrow" aria-hidden="true"><svg class="arrow" aria-hidden="true"><use href="/icons.svg#arrow-down" /></svg></span>
             </summary>
             <div class="row-body">
               <div class="row-text">
@@ -160,8 +160,8 @@
                   known prices and the chart still shows recent history after market close.
                 </p>
                 <div class="links">
-                  <a href="https://github.com/actuallycedric/stock-tracker-frontend" target="_blank" rel="noreferrer">frontend <span aria-hidden="true">&nearr;</span></a>
-                  <a href="https://github.com/actuallycedric/live-stock-tracker" target="_blank" rel="noreferrer">backend <span aria-hidden="true">&nearr;</span></a>
+                  <a href="https://github.com/actuallycedric/stock-tracker-frontend" target="_blank" rel="noreferrer">frontend <svg class="arrow" aria-hidden="true"><use href="/icons.svg#arrow-up-right" /></svg></a>
+                  <a href="https://github.com/actuallycedric/live-stock-tracker" target="_blank" rel="noreferrer">backend <svg class="arrow" aria-hidden="true"><use href="/icons.svg#arrow-up-right" /></svg></a>
                 </div>
               </div>
               <figure class="row-shot">
@@ -170,11 +170,11 @@
             </div>
           </details>
 
-          <details class="row">
+          <details class="row" id="bank-api" data-skills="java spring-boot postgres testcontainers junit git">
             <summary>
               <span class="row-name">bank api</span>
               <span class="row-meta">spring boot · postgres · testcontainers</span>
-              <span class="row-arrow" aria-hidden="true">&darr;</span>
+              <span class="row-arrow" aria-hidden="true"><svg class="arrow" aria-hidden="true"><use href="/icons.svg#arrow-down" /></svg></span>
             </summary>
             <div class="row-body">
               <div class="row-text">
@@ -186,17 +186,17 @@
                   tests run against a real postgres instance in docker via testcontainers.
                 </p>
                 <div class="links">
-                  <a href="https://github.com/actuallycedric/bank-account-reboot" target="_blank" rel="noreferrer">repo <span aria-hidden="true">&nearr;</span></a>
+                  <a href="https://github.com/actuallycedric/bank-account-reboot" target="_blank" rel="noreferrer">repo <svg class="arrow" aria-hidden="true"><use href="/icons.svg#arrow-up-right" /></svg></a>
                 </div>
               </div>
             </div>
           </details>
 
-          <details class="row">
+          <details class="row" id="lc-journal" data-skills="javascript html python git">
             <summary>
               <span class="row-name">leetcode journal</span>
               <span class="row-meta">javascript · html &amp; css · localstorage</span>
-              <span class="row-arrow" aria-hidden="true">&darr;</span>
+              <span class="row-arrow" aria-hidden="true"><svg class="arrow" aria-hidden="true"><use href="/icons.svg#arrow-down" /></svg></span>
             </summary>
             <div class="row-body">
               <div class="row-text">
@@ -206,8 +206,8 @@
                   be exported as a backup.
                 </p>
                 <div class="links">
-                  <a href="https://lc-journal.vercel.app" target="_blank" rel="noreferrer">site <span aria-hidden="true">&nearr;</span></a>
-                  <a href="https://github.com/actuallycedric/lc-journal" target="_blank" rel="noreferrer">repo <span aria-hidden="true">&nearr;</span></a>
+                  <a href="https://lc-journal.vercel.app" target="_blank" rel="noreferrer">site <svg class="arrow" aria-hidden="true"><use href="/icons.svg#arrow-up-right" /></svg></a>
+                  <a href="https://github.com/actuallycedric/lc-journal" target="_blank" rel="noreferrer">repo <svg class="arrow" aria-hidden="true"><use href="/icons.svg#arrow-up-right" /></svg></a>
                 </div>
               </div>
               <figure class="row-shot">
@@ -218,19 +218,27 @@
         </div>
 
         <div class="tools reveal">
-          <p class="eyebrow">my skills</p>
-          <ul class="skills">
-            <li><svg aria-hidden="true"><use href="/icons.svg#java" /></svg>java</li>
-            <li><svg aria-hidden="true"><use href="/icons.svg#spring-boot" /></svg>spring boot</li>
-            <li><svg aria-hidden="true"><use href="/icons.svg#postgres" /></svg>postgres</li>
-            <li><svg aria-hidden="true"><use href="/icons.svg#testcontainers" /></svg>testcontainers</li>
-            <li><svg aria-hidden="true"><use href="/icons.svg#junit" /></svg>junit</li>
-            <li><svg aria-hidden="true"><use href="/icons.svg#python" /></svg>python</li>
-            <li><svg aria-hidden="true"><use href="/icons.svg#javascript" /></svg>javascript</li>
-            <li><svg aria-hidden="true"><use href="/icons.svg#react" /></svg>react</li>
-            <li><svg aria-hidden="true"><use href="/icons.svg#html" /></svg>html &amp; css</li>
-            <li><svg aria-hidden="true"><use href="/icons.svg#git" /></svg>git</li>
-          </ul>
+          <p class="eyebrow">my skills, and where i've used them</p>
+          <!-- a web: projects are hubs, each skill links to the projects whose data-skills name it.
+               --x/--y place a node on wide screens, --mx/--my on phones. main.js draws the lines. -->
+          <div class="web" role="group" aria-label="skills, linked to the projects that use them">
+            <svg class="web-lines" aria-hidden="true"></svg>
+
+            <a class="node hub" href="#tracker" data-project="tracker" style="--x: 18%; --y: 52%; --mx: 27%; --my: 40%"><span class="dot">live stock tracker</span></a>
+            <a class="node hub" href="#bank-api" data-project="bank-api" style="--x: 58%; --y: 26%; --mx: 73%; --my: 24%"><span class="dot">bank api</span></a>
+            <a class="node hub" href="#lc-journal" data-project="lc-journal" style="--x: 74%; --y: 74%; --mx: 68%; --my: 76%"><span class="dot">leetcode journal</span></a>
+
+            <button class="node skill" type="button" data-skill="java" style="--x: 24%; --y: 22%; --mx: 18%; --my: 16%"><span class="dot"><svg aria-hidden="true"><use href="/icons.svg#java" /></svg></span><span class="label">java</span></button>
+            <button class="node skill" type="button" data-skill="spring-boot" style="--x: 38%; --y: 40%; --mx: 50%; --my: 32%"><span class="dot"><svg aria-hidden="true"><use href="/icons.svg#spring-boot" /></svg></span><span class="label">spring boot</span></button>
+            <button class="node skill" type="button" data-skill="postgres" style="--x: 38%; --y: 6%; --mx: 50%; --my: 6%"><span class="dot"><svg aria-hidden="true"><use href="/icons.svg#postgres" /></svg></span><span class="label">postgres</span></button>
+            <button class="node skill" type="button" data-skill="testcontainers" style="--x: 78%; --y: 8%; --mx: 80%; --my: 8%"><span class="dot"><svg aria-hidden="true"><use href="/icons.svg#testcontainers" /></svg></span><span class="label">testcontainers</span></button>
+            <button class="node skill" type="button" data-skill="junit" style="--x: 88%; --y: 34%; --mx: 85%; --my: 44%"><span class="dot"><svg aria-hidden="true"><use href="/icons.svg#junit" /></svg></span><span class="label">junit</span></button>
+            <button class="node skill" type="button" data-skill="git" style="--x: 50%; --y: 56%; --mx: 55%; --my: 52%"><span class="dot"><svg aria-hidden="true"><use href="/icons.svg#git" /></svg></span><span class="label">git</span></button>
+            <button class="node skill" type="button" data-skill="javascript" style="--x: 40%; --y: 82%; --mx: 34%; --my: 66%"><span class="dot"><svg aria-hidden="true"><use href="/icons.svg#javascript" /></svg></span><span class="label">javascript</span></button>
+            <button class="node skill" type="button" data-skill="react" style="--x: 6%; --y: 82%; --mx: 15%; --my: 58%"><span class="dot"><svg aria-hidden="true"><use href="/icons.svg#react" /></svg></span><span class="label">react</span></button>
+            <button class="node skill" type="button" data-skill="html" style="--x: 92%; --y: 88%; --mx: 82%; --my: 92%"><span class="dot"><svg aria-hidden="true"><use href="/icons.svg#html" /></svg></span><span class="label">html &amp; css</span></button>
+            <button class="node skill" type="button" data-skill="python" style="--x: 93%; --y: 60%; --mx: 40%; --my: 92%"><span class="dot"><svg aria-hidden="true"><use href="/icons.svg#python" /></svg></span><span class="label">python</span></button>
+          </div>
         </div>
       </section>
 
@@ -270,10 +278,10 @@
         </div>
 
         <ul class="connections reveal">
-          <li><a href="https://github.com/actuallycedric" target="_blank" rel="noreferrer"><svg aria-hidden="true"><use href="/icons.svg#github" /></svg>github<span class="handle">actuallycedric</span><span class="go" aria-hidden="true">&nearr;</span></a></li>
-          <li><a href="https://www.linkedin.com/in/clarencecesante/" target="_blank" rel="noreferrer"><svg aria-hidden="true"><use href="/icons.svg#linkedin" /></svg>linkedin<span class="handle">clarencecesante</span><span class="go" aria-hidden="true">&nearr;</span></a></li>
-          <li><a href="https://boxd.it/fe8yJ" target="_blank" rel="noreferrer"><svg aria-hidden="true"><use href="/icons.svg#letterboxd" /></svg>letterboxd<span class="handle">films i've logged</span><span class="go" aria-hidden="true">&nearr;</span></a></li>
-          <li><a href="https://open.spotify.com/user/t8k7y016c4ekf2b1wway8sirm" target="_blank" rel="noreferrer"><svg aria-hidden="true"><use href="/icons.svg#spotify" /></svg>spotify<span class="handle">what's on repeat</span><span class="go" aria-hidden="true">&nearr;</span></a></li>
+          <li><a href="https://github.com/actuallycedric" target="_blank" rel="noreferrer"><svg aria-hidden="true"><use href="/icons.svg#github" /></svg>github<span class="handle">actuallycedric</span><span class="go" aria-hidden="true"><svg class="arrow" aria-hidden="true"><use href="/icons.svg#arrow-up-right" /></svg></span></a></li>
+          <li><a href="https://www.linkedin.com/in/clarencecesante/" target="_blank" rel="noreferrer"><svg aria-hidden="true"><use href="/icons.svg#linkedin" /></svg>linkedin<span class="handle">clarencecesante</span><span class="go" aria-hidden="true"><svg class="arrow" aria-hidden="true"><use href="/icons.svg#arrow-up-right" /></svg></span></a></li>
+          <li><a href="https://boxd.it/fe8yJ" target="_blank" rel="noreferrer"><svg aria-hidden="true"><use href="/icons.svg#letterboxd" /></svg>letterboxd<span class="handle">films i've logged</span><span class="go" aria-hidden="true"><svg class="arrow" aria-hidden="true"><use href="/icons.svg#arrow-up-right" /></svg></span></a></li>
+          <li><a href="https://open.spotify.com/user/t8k7y016c4ekf2b1wway8sirm" target="_blank" rel="noreferrer"><svg aria-hidden="true"><use href="/icons.svg#spotify" /></svg>spotify<span class="handle">what's on repeat</span><span class="go" aria-hidden="true"><svg class="arrow" aria-hidden="true"><use href="/icons.svg#arrow-up-right" /></svg></span></a></li>
           <li><button class="copy-email" type="button" data-email="clarenceccesante@gmail.com" aria-label="copy email address clarenceccesante@gmail.com"><svg viewBox="0 0 24 24" aria-hidden="true" class="stroke-icon"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>email<span class="handle email-address">clarenceccesante@gmail.com</span><span class="go copy-hint" aria-live="polite">copy</span></button></li>
         </ul>
       </section>

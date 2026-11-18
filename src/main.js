@@ -162,6 +162,108 @@ document.querySelectorAll('.gallery').forEach((gallery) => {
   update()
 })
 
+// Skill web: each project row lists its skills in data-skills, so the links
+// live next to the projects and the web just draws them. Pointing at (or
+// tapping) a node lights it, its lines and the nodes on the other end.
+document.querySelectorAll('.web').forEach((web) => {
+  const svg = web.querySelector('.web-lines')
+  const skills = new Map([...web.querySelectorAll('.skill')].map((el) => [el.dataset.skill, el]))
+  const edges = []
+
+  for (const hub of web.querySelectorAll('.hub')) {
+    const row = document.getElementById(hub.dataset.project)
+    if (!row) {
+      console.warn(`skill web: no project row with id "${hub.dataset.project}"`)
+      continue
+    }
+    for (const name of row.dataset.skills.split(/\s+/)) {
+      const skill = skills.get(name)
+      if (!skill) {
+        console.warn(`skill web: "${hub.dataset.project}" lists unknown skill "${name}"`)
+        continue
+      }
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+      svg.append(path)
+      edges.push({ hub, skill, path })
+    }
+
+    // following a hub opens its project, not just scrolls to it
+    hub.addEventListener('click', () => {
+      row.open = true
+    })
+  }
+
+  // screen readers get the links the lines show
+  for (const [, skill] of skills) {
+    const name = skill.querySelector('.label').textContent
+    const used = edges.filter((e) => e.skill === skill).map((e) => e.hub.textContent)
+    skill.setAttribute('aria-label', used.length ? `${name}, used in ${used.join(', ')}` : name)
+  }
+
+  // gently bowed lines read as hand-drawn rather than a wiring diagram
+  const draw = () => {
+    const box = web.getBoundingClientRect()
+    const centre = (node) => {
+      const r = node.querySelector('.dot').getBoundingClientRect()
+      return [r.left + r.width / 2 - box.left, r.top + r.height / 2 - box.top]
+    }
+    for (const { hub, skill, path } of edges) {
+      const [x1, y1] = centre(hub)
+      const [x2, y2] = centre(skill)
+      const bow = 0.12
+      const cx = (x1 + x2) / 2 - (y2 - y1) * bow
+      const cy = (y1 + y2) / 2 + (x2 - x1) * bow
+      path.setAttribute('d', `M${x1} ${y1}Q${cx} ${cy} ${x2} ${y2}`)
+    }
+  }
+
+  let pinned = null
+  const light = (node) => {
+    const linked = edges.filter((e) => e.hub === node || e.skill === node)
+    const lit = new Set([node, ...linked.flatMap((e) => [e.hub, e.skill])])
+    web.classList.add('focusing')
+    web.querySelectorAll('.node').forEach((n) => n.classList.toggle('lit', lit.has(n)))
+    for (const e of edges) e.path.classList.toggle('lit', linked.includes(e))
+  }
+  const clear = () => {
+    if (pinned) return light(pinned)
+    web.classList.remove('focusing')
+    web.querySelectorAll('.lit').forEach((el) => el.classList.remove('lit'))
+  }
+
+  web.addEventListener('pointerover', (e) => {
+    const node = e.target.closest('.node')
+    if (node) light(node)
+  })
+  web.addEventListener('pointerout', (e) => {
+    const node = e.target.closest('.node')
+    if (node && !node.contains(e.relatedTarget)) clear()
+  })
+  web.addEventListener('focusin', (e) => {
+    const node = e.target.closest('.node')
+    if (node) light(node)
+  })
+  web.addEventListener('focusout', clear)
+
+  // touch has no hover, so a tap pins a skill until you tap it again or elsewhere
+  for (const [, skill] of skills) {
+    skill.addEventListener('click', () => {
+      pinned = pinned === skill ? null : skill
+      if (pinned) light(pinned)
+      else clear()
+    })
+  }
+  document.addEventListener('click', (e) => {
+    if (pinned && !web.contains(e.target)) {
+      pinned = null
+      clear()
+    }
+  })
+
+  new ResizeObserver(draw).observe(web)
+  draw()
+})
+
 // Scroll reveals: fade each .reveal block in the first time it comes into view.
 const revealer = new IntersectionObserver(
   (entries) => {

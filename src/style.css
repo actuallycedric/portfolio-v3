@@ -54,7 +54,7 @@
 .mesh,
 .pill:hover,
 .pill:focus-visible,
-.skills li:hover,
+.web .lit > .dot,
 .row summary:hover .row-arrow,
 .row[open] .row-arrow,
 .connections li :hover > .go,
@@ -154,6 +154,15 @@ button {
   width: 0;
   height: 0;
   overflow: hidden;
+}
+
+/* sprite arrows sized to the text around them */
+.arrow {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
 }
 
 .eyebrow {
@@ -475,11 +484,11 @@ h2 {
   transition: color 0.2s;
 }
 
-.pill span {
+.pill .arrow {
   transition: translate 0.35s var(--ease);
 }
 
-.pill:hover span {
+.pill:hover .arrow {
   translate: 3px 0;
 }
 
@@ -787,40 +796,131 @@ h2 {
   text-align: center;
 }
 
-.skills {
-  display: grid;
-  /* ten tools: two even rows of five, or five rows of two on phones */
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.5rem;
-  margin-top: 1.25rem;
-  text-align: left;
+/* ---------- skill web ----------
+   nodes sit at hand-picked percentages; each node's dot is centred on its
+   point (the label hangs below), so the lines main.js draws meet dot centres */
+.web {
+  --hub: 6.5rem;
+  --leaf-d: 3.25rem;
+  position: relative;
+  height: 34rem;
+  margin-top: 4rem;
 }
 
-@media (min-width: 600px) {
-  .skills {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
+.web-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  stroke: var(--rule);
+  stroke-width: 1.25px;
+  stroke-linecap: round;
 }
 
-.skills li {
+.web-lines path {
+  transition: stroke 0.3s, opacity 0.3s;
+}
+
+.node {
+  --d: var(--leaf-d);
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 1.5rem;
-  min-height: 6.5rem;
-  padding: 1rem;
-  border-radius: 0.9rem;
-  background: var(--card);
-  font-size: 0.875rem;
-  font-weight: 500;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0;
+  border: 0;
+  background: none;
   color: var(--ink);
-  transition: color 0.2s;
+  font: inherit;
+  cursor: pointer;
+  translate: -50% calc(var(--d) / -2);
+  transition: opacity 0.3s;
 }
 
-.skills svg {
+.hub {
+  --d: var(--hub);
+}
+
+.node .dot {
+  display: grid;
+  place-items: center;
+  width: var(--d);
+  height: var(--d);
+  border-radius: 50%;
+  transition: scale 0.4s var(--ease);
+}
+
+.skill .dot {
+  border: 1px solid var(--rule);
+  background: var(--bg);
+}
+
+.skill svg {
   width: 1.25rem;
   height: 1.25rem;
   fill: currentColor;
+}
+
+.hub .dot {
+  padding: 0.75rem;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.node .label {
+  padding: 0 0.3rem;
+  border-radius: 0.3rem;
+  background: var(--bg);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* pointing at a node lights it, its lines and whatever is on the other end;
+   everything else steps back */
+.web .lit > .dot {
+  border-color: transparent;
+  scale: 1.08;
+}
+
+.web-lines path.lit {
+  stroke: var(--ink);
+}
+
+.web.focusing .node:not(.lit) {
+  opacity: 0.3;
+}
+
+.web.focusing .web-lines path:not(.lit) {
+  opacity: 0.25;
+}
+
+@media (max-width: 700px) {
+  .web {
+    --hub: 5rem;
+    --leaf-d: 2.75rem;
+    height: 42rem;
+  }
+  .node {
+    left: var(--mx);
+    top: var(--my);
+  }
+  .hub .dot {
+    padding: 0.5rem;
+    font-size: 0.6875rem;
+  }
+  .node .label {
+    font-size: 0.75rem;
+  }
 }
 
 /* ---------- photo carousel ---------- */
