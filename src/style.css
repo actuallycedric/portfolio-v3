@@ -973,21 +973,34 @@ h2 {
   }
 }
 
+/* one photo at a time, centred, with its neighbours peeking in at the sides.
+   the track's side padding lets the first and last photo reach the centre */
+.carousel {
+  container-type: inline-size;
+}
+
 .carousel-track {
   display: flex;
   gap: 1rem;
   width: max-content;
+  padding-inline: 10cqi;
 }
 
 .carousel figure {
   flex: none;
-  width: clamp(13rem, 24vw, 18rem);
-  scroll-snap-align: start;
+  width: 80cqi;
+  scroll-snap-align: center;
+  transition: scale 0.5s var(--ease), opacity 0.5s var(--ease);
+}
+
+.js .carousel figure:not(.current) {
+  scale: 0.9;
+  opacity: 0.45;
 }
 
 .carousel img {
   width: 100%;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 3 / 2;
   object-fit: cover;
   border-radius: 0.9rem;
 }

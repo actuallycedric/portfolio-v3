@@ -98,6 +98,16 @@ document.querySelectorAll('.gallery').forEach((gallery) => {
     const progress = max > 0 ? x / max : 0
     thumb.style.setProperty('--thumb', `${share * 100}%`)
     thumb.style.setProperty('--offset', `${progress * (1 / share - 1) * 100}%`)
+    // the photo nearest the middle is the featured one; the rest dim and shrink
+    const middle = scroller.getBoundingClientRect().left + scroller.clientWidth / 2
+    let current = null
+    let best = Infinity
+    for (const fig of scroller.querySelectorAll('figure')) {
+      const r = fig.getBoundingClientRect()
+      const off = Math.abs(r.left + r.width / 2 - middle)
+      if (off < best) [best, current] = [off, fig]
+    }
+    for (const fig of scroller.querySelectorAll('figure')) fig.classList.toggle('current', fig === current)
   }
 
   // one step = the photos that fully fit, so nothing gets skipped
