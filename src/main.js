@@ -186,11 +186,6 @@ document.querySelectorAll('.web').forEach((web) => {
       svg.append(path)
       edges.push({ hub, skill, path })
     }
-
-    // following a hub opens its project, not just scrolls to it
-    hub.addEventListener('click', () => {
-      row.open = true
-    })
   }
 
   // screen readers get the links the lines show
@@ -231,11 +226,15 @@ document.querySelectorAll('.web').forEach((web) => {
     web.querySelectorAll('.lit').forEach((el) => el.classList.remove('lit'))
   }
 
+  // touch fires pointerover on press, so holding a node would light it; taps
+  // go through the click handler below instead
   web.addEventListener('pointerover', (e) => {
+    if (e.pointerType !== 'mouse') return
     const node = e.target.closest('.node')
     if (node) light(node)
   })
   web.addEventListener('pointerout', (e) => {
+    if (e.pointerType !== 'mouse') return
     const node = e.target.closest('.node')
     if (node && !node.contains(e.relatedTarget)) clear()
   })
@@ -245,10 +244,10 @@ document.querySelectorAll('.web').forEach((web) => {
   })
   web.addEventListener('focusout', clear)
 
-  // touch has no hover, so a tap pins a skill until you tap it again or elsewhere
-  for (const [, skill] of skills) {
-    skill.addEventListener('click', () => {
-      pinned = pinned === skill ? null : skill
+  // touch has no hover, so a tap pins a node until you tap it again or elsewhere
+  for (const node of web.querySelectorAll('.node')) {
+    node.addEventListener('click', () => {
+      pinned = pinned === node ? null : node
       if (pinned) light(pinned)
       else clear()
     })

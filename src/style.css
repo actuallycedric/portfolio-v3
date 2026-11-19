@@ -55,6 +55,7 @@
 .pill:hover,
 .pill:focus-visible,
 .web .lit > .dot,
+.hub .dot,
 .row summary:hover .row-arrow,
 .row[open] .row-arrow,
 .connections li :hover > .go,
@@ -840,6 +841,8 @@ h2 {
   cursor: pointer;
   translate: -50% calc(var(--d) / -2);
   transition: opacity 0.3s;
+  /* a long press would otherwise select the label text */
+  user-select: none;
 }
 
 .hub {
@@ -868,8 +871,6 @@ h2 {
 
 .hub .dot {
   padding: 0.75rem;
-  background: var(--ink);
-  color: var(--bg);
   font-size: 0.8125rem;
   font-weight: 500;
   line-height: 1.2;
@@ -1101,6 +1102,10 @@ h2 {
 @media (max-width: 520px) {
   .handle:not(.email-address) {
     display: none;
+  }
+  /* with the handle gone, nothing else pushes the arrow to the right edge */
+  .connections a .go {
+    margin-left: auto;
   }
   .email-address {
     font-size: 0.8125rem;
