@@ -454,20 +454,34 @@ h2 {
 
 /* leaf highlighter behind one phrase */
 .glow {
-  background: linear-gradient(90deg, var(--lime), var(--mint) 55%, var(--leaf)) 0 88% / 100% 0.42em no-repeat;
+  --glow-h: 0.5em;
+  /* a wobbly, tapered stroke so it reads as a highlighter pass, not a rule.
+     colours are --lime, --mint and --leaf baked in, since a data uri can't read css vars */
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 20' preserveAspectRatio='none'%3E%3ClinearGradient id='g'%3E%3Cstop offset='0' stop-color='%23e2f5a4'/%3E%3Cstop offset='.55' stop-color='%238fd4ae'/%3E%3Cstop offset='1' stop-color='%23b1db68'/%3E%3C/linearGradient%3E%3Cpath fill='url(%23g)' fill-opacity='.9' d='M6 7C50 5 95 6 130 4S180 2 195 3Q200 7 196 12C160 12 120 15 80 15S30 17 5 17Q0 12 6 7Z'/%3E%3C/svg%3E") 0 90% / 100% var(--glow-h) no-repeat;
   color: inherit;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
 
 :root[data-theme="dark"] .glow {
-  background-size: 100% 0.18em;
+  --glow-h: 0.18em;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .glow {
-    background-size: 100% 0.18em;
+    --glow-h: 0.18em;
   }
+}
+
+/* draws the highlighter in each time it scrolls into view; main.js toggles .drawn.
+   it snaps back with no transition so the reset never shows */
+.js .glow {
+  background-size: 0% var(--glow-h);
+}
+
+.js .glow.drawn {
+  background-size: 100% var(--glow-h);
+  transition: background-size 0.9s cubic-bezier(0.5, 0, 0.3, 1) 0.4s;
 }
 
 .pill {
@@ -1199,6 +1213,9 @@ h2 {
   .js .reveal {
     opacity: 1;
     translate: none;
+  }
+  .js .glow {
+    background-size: 100% var(--glow-h);
   }
   .places {
     overflow-x: auto;

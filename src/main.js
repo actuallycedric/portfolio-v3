@@ -281,3 +281,20 @@ const revealer = new IntersectionObserver(
   { rootMargin: '0px 0px -10% 0px' },
 )
 document.querySelectorAll('.reveal').forEach((el) => revealer.observe(el))
+
+// Highlighter: redraw every time the phrase comes back into view. it draws once
+// clear of the bottom edge but only resets when fully off screen, so it never
+// visibly snaps back while you can still see it.
+const drawGlow = new IntersectionObserver(
+  (entries) => {
+    for (const entry of entries) if (entry.isIntersecting) entry.target.classList.add('drawn')
+  },
+  { rootMargin: '0px 0px -10% 0px' },
+)
+const resetGlow = new IntersectionObserver((entries) => {
+  for (const entry of entries) if (!entry.isIntersecting) entry.target.classList.remove('drawn')
+})
+document.querySelectorAll('.glow').forEach((el) => {
+  drawGlow.observe(el)
+  resetGlow.observe(el)
+})
