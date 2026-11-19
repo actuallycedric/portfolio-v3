@@ -244,9 +244,15 @@ document.querySelectorAll('.web').forEach((web) => {
   })
   web.addEventListener('focusout', clear)
 
-  // touch has no hover, so a tap pins a node until you tap it again or elsewhere
+  // read from pointerdown because not every browser exposes pointerType on click
+  let pointerType = ''
+  web.addEventListener('pointerdown', (e) => { pointerType = e.pointerType })
+
+  // touch has no hover, so a tap pins a node until you tap it again or elsewhere.
+  // mouse users already get hover, so clicking a project hub does nothing for them
   for (const node of web.querySelectorAll('.node')) {
     node.addEventListener('click', () => {
+      if (pointerType === 'mouse' && node.classList.contains('hub')) return
       pinned = pinned === node ? null : node
       if (pinned) light(pinned)
       else clear()
